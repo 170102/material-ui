@@ -231,8 +231,6 @@ class DatePicker extends Component {
    */
   focus() {
     this.openDialog();
-    if (this.shouldHandleKeyboard)
-      this.refs.input.focus();
   }
 
   shouldHandleKeyboard = () => {
@@ -273,34 +271,10 @@ class DatePicker extends Component {
   };
 
   handleInputBlur = () => {
-    const tmpDate = this.state.date instanceof Date ? this.state.date : undefined;
-    this.handleAccept(tmpDate);
-  }
-
-  handleWindowKeyDown = (event) => {
-    const key = keycode(event),
-      inputHasFocus = document.activeElement == this.refs.input.input;
-
-    switch (key) {
-      case 'tab':
-      case 'esc':
-        if (!inputHasFocus) {
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-        }
-        break;
-      case 'up':
-      case 'down':
-      case 'left':
-      case 'right':
-        if (this.refs.dialogWindow.state.open
-          && !inputHasFocus) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        break;
-      default:
-        break;
-    }
+    this.setState({
+      keyboardActivated: false,
+      date: this.state.date instanceof Date ? this.state.date : undefined,
+    });
   }
 
   handleKeyDown = (event) => {
