@@ -231,7 +231,7 @@ class DatePicker extends Component {
    */
   focus() {
     this.openDialog();
-    if(this.shouldHandleKeyboard)
+    if (this.shouldHandleKeyboard)
       this.refs.input.focus();
   }
 
@@ -299,12 +299,12 @@ class DatePicker extends Component {
     if(this.state.keyboardActivated)
       this.setState({ 
         keyboardActivated: false,
-        date: this.state.date instanceof Date ? this.state.date : undefined
+        date: this.state.date instanceof Date ? this.state.date : undefined,
       });
   }
 
   handleKeyDown = (event) => {
-    if(!this.shouldHandleKeyboard)
+    if (!this.shouldHandleKeyboard)
       return;
 
     const key = keycode(event);
