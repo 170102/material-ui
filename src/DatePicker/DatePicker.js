@@ -231,8 +231,6 @@ class DatePicker extends Component {
    */
   focus() {
     this.openDialog();
-    if (this.shouldHandleKeyboard)
-      this.refs.input.focus();
   }
 
   shouldHandleKeyboard = () => {
