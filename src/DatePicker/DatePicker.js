@@ -4,6 +4,7 @@ import EventListener from 'react-event-listener';
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
+import deprecated from '../utils/deprecatedPropType';
 import keycode from 'keycode';
 
 
@@ -230,6 +231,12 @@ class DatePicker extends Component {
    */
   focus() {
     this.openDialog();
+    if(this.shouldHandleKeyboard)
+      this.refs.input.focus();
+  }
+
+  shouldHandleKeyboard = () => {
+    return !this.props.disabled && this.props.container == 'inline' && !this.isControlled();
   }
 
   shouldHandleKeyboard = () => {
@@ -262,12 +269,7 @@ class DatePicker extends Component {
     }
   };
 
-  handleInputBlur = () => {
-    const tmpDate = this.state.date instanceof Date ? this.state.date : undefined;
-    this.handleAccept(tmpDate);
-  }
-
-  handleWindowKeyDown = (event) => {
+ handleWindowKeyDown = (event) => {
     const key = keycode(event),
       inputHasFocus = document.activeElement == this.refs.input.input;
 
@@ -292,9 +294,17 @@ class DatePicker extends Component {
         break;
     }    
   }
+  
+  handleInputBlur = (event) => {
+    if(this.state.keyboardActivated)
+      this.setState({ 
+        keyboardActivated: false,
+        date: this.state.date instanceof Date ? this.state.date : undefined
+      });
+  }
 
   handleKeyDown = (event) => {
-    if (!this.shouldHandleKeyboard)
+    if(!this.shouldHandleKeyboard)
       return;
 
     const key = keycode(event);
@@ -312,7 +322,8 @@ class DatePicker extends Component {
         }
         break;
       case 'esc':
-        this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+        if(this.state.keyboardActivated)
+          this.setState({ keyboardActivated: false }, this.refs.dialogWindow.dismiss);
         break;
       case 'right':
       case 'left':
