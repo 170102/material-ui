@@ -198,6 +198,9 @@ class DatePicker extends Component {
      * (get the current system date while doing so)
      * else set it to the currently selected date
      */
+    if (this.shouldHandleKeyboard)
+      this.refs.input.focus();
+
     if (this.state.date !== undefined) {
       this.setState({
         dialogDate: this.getDate(),
@@ -214,8 +217,6 @@ class DatePicker extends Component {
    */
   focus() {
     this.openDialog();
-    if (this.shouldHandleKeyboard)
-      this.refs.input.focus();
   }
 
   shouldHandleKeyboard = () => {
@@ -253,11 +254,10 @@ class DatePicker extends Component {
   };
 
   handleInputBlur = () => {
-    if (this.state.keyboardActivated)
-      this.setState({
-        keyboardActivated: false,
-        date: this.state.date instanceof Date ? this.state.date : undefined,
-      });
+    this.setState({
+      keyboardActivated: false,
+      date: this.state.date instanceof Date ? this.state.date : undefined,
+    });
   }
 
   handleKeyDown = (event) => {
