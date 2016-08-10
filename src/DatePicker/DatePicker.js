@@ -231,12 +231,15 @@ class DatePicker extends Component {
    */
   focus() {
     this.openDialog();
-    if(this.shouldHandleKeyboard)
+    if (this.shouldHandleKeyboard)
       this.refs.input.focus();
   }
 
   shouldHandleKeyboard = () => {
-    return !this.props.disabled && this.props.container == 'inline' && !this.isControlled();
+    return this.props.keyboardEnabled &&
+      !this.props.disabled &&
+      this.props.container === 'inline' &&
+      !this.isControlled();
   }
 
   shouldHandleKeyboard = () => {
@@ -307,19 +310,8 @@ class DatePicker extends Component {
     const key = keycode(event);
     switch (key) {
       case 'tab':
-        if (this.state.keyboardActivated && this.refs.dialogWindow.state.open) {
-          if (event.shiftKey) {
-            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-          } else {
-            this.refs.input.blur();
-
-            event.preventDefault();
-            event.stopPropagation();
-          }
-        }
-        break;
-      case 'esc':
-        this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+        if (this.state.keyboardActivated)
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
         break;
       case 'right':
       case 'left':
