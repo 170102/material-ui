@@ -4,6 +4,7 @@ import EventListener from 'react-event-listener';
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
+import deprecated from '../utils/deprecatedPropType';
 import keycode from 'keycode';
 
 
@@ -230,6 +231,12 @@ class DatePicker extends Component {
    */
   focus() {
     this.openDialog();
+    if(this.shouldHandleKeyboard)
+      this.refs.input.focus();
+  }
+
+  shouldHandleKeyboard = () => {
+    return !this.props.disabled && this.props.container == 'inline' && !this.isControlled();
   }
 
   shouldHandleKeyboard = () => {
@@ -275,7 +282,7 @@ class DatePicker extends Component {
       case 'tab':
       case 'esc':
         if (!inputHasFocus) {
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);            
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
         }
         break;
       case 'up':
@@ -290,7 +297,7 @@ class DatePicker extends Component {
         break;
       default:
         break;
-    }    
+    }
   }
 
   handleKeyDown = (event) => {
@@ -465,7 +472,7 @@ class DatePicker extends Component {
           <EventListener
             target="window"
             onKeyDown={this.handleWindowKeyDown}
-          /> 
+          />
         : null }
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
