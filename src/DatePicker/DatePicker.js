@@ -236,13 +236,6 @@ class DatePicker extends Component {
   shouldHandleKeyboard = () => {
     return this.props.keyboardEnabled &&
       !this.props.disabled &&
-      this.props.container === 'inline' &&
-      !this.isControlled();
-  }
-
-  shouldHandleKeyboard = () => {
-    return this.props.keyboardEnabled &&
-      !this.props.disabled &&
       this.props.container === 'inline';
   }
 
