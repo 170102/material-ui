@@ -264,10 +264,8 @@ class DatePicker extends Component {
   };
 
   handleInputBlur = () => {
-    this.setState({
-      keyboardActivated: false,
-      date: this.state.date instanceof Date ? this.state.date : undefined,
-    });
+    var tmpDate = this.state.date instanceof Date ? this.state.date : undefined;
+    this.handleAccept(tmpDate);
   }
 
   handleKeyDown = (event) => {
