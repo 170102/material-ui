@@ -176,6 +176,7 @@ class DatePicker extends Component {
   };
 
   componentWillMount() {
+
     this.setState({
       date: this.isControlled() ? this.getControlledDate() : this.props.defaultDate,
     });
