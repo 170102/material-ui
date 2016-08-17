@@ -1,6 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+<<<<<<< HEAD
 import EventListener from 'react-event-listener';
+=======
+>>>>>>> 657193b... Keyboard DatePicker now allows mouse interaction while date dialog open
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
@@ -171,15 +174,22 @@ class DatePicker extends Component {
   };
 
   componentWillMount() {
+
     this.setState({
       date: this.isControlled() ? this.getControlledDate() : this.props.defaultDate,
     });
   }
 
   componentDidMount() {
-    const node = ReactDOM.findDOMNode(this.refs.root);
+    var node = ReactDOM.findDOMNode(this.refs.input);
     node.addEventListener('touchstart', this.handleClick);
     node.addEventListener('click', this.handleClick);
+  }
+
+  componentWillUnmount() {
+    var node = ReactDOM.findDOMNode(this.refs.input);
+    node.removeEventListener('touchstart', this.handleClick);
+    node.removeEventListener('click', this.handleClick);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -341,6 +351,7 @@ class DatePicker extends Component {
   handleClick = (event) => {
     if (this.shouldHandleKeyboard() && this.refs.dialogWindow.state.open) {
       event.stopPropagation();
+      event.preventDefault();
       return;
     }
   }
@@ -361,7 +372,7 @@ class DatePicker extends Component {
         this.openDialog();
       }, 0);
     }
-  }
+  };
 
   isControlled() {
     return this.props.hasOwnProperty('value');
