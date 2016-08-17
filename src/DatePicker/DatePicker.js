@@ -171,6 +171,7 @@ class DatePicker extends Component {
   };
 
   componentWillMount() {
+
     this.setState({
       date: this.isControlled() ? this.getControlledDate() : this.props.defaultDate,
     });
@@ -389,7 +390,7 @@ class DatePicker extends Component {
       event.stopPropagation();
       event.preventDefault();
       return;
-    }
+    } 
 
     if (this.props.onTouchTap) {
       this.props.onTouchTap(event);
