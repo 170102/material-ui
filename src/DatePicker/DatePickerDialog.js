@@ -28,6 +28,7 @@ class DatePickerDialog extends Component {
     onDismiss: PropTypes.func,
     onShow: PropTypes.func,
     open: PropTypes.bool,
+    useLayerForClickAway: PropTypes.bool,
     shouldDisableDate: PropTypes.func,
     style: PropTypes.object,
   };
@@ -120,6 +121,7 @@ class DatePickerDialog extends Component {
       onDismiss, // eslint-disable-line no-unused-vars
       onShow, // eslint-disable-line no-unused-vars
       shouldDisableDate,
+      useLayerForClickAway,
       style, // eslint-disable-line no-unused-vars
       animation,
       ...other
@@ -150,6 +152,7 @@ class DatePickerDialog extends Component {
           ref="dialog"
           repositionOnUpdate={true}
           open={open}
+          useLayerForClickAway={this.props.useLayerForClickAway}
           onRequestClose={this.handleRequestClose}
           style={Object.assign(styles.dialogBodyContent, containerStyle)}
         >
