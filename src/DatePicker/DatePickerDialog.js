@@ -28,7 +28,6 @@ class DatePickerDialog extends Component {
     onDismiss: PropTypes.func,
     onShow: PropTypes.func,
     open: PropTypes.bool,
-    useLayerForClickAway: PropTypes.bool,
     shouldDisableDate: PropTypes.func,
     style: PropTypes.object,
     useLayerForClickAway: PropTypes.bool,
