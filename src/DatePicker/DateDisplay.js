@@ -10,7 +10,7 @@ function getStyles(props, context, state) {
   const styles = {
     root: {
       width: isLandscape ? 165 : '100%',
-      height: isLandscape ? 330 : 'auto',
+      height: isLandscape ? 335 : 'auto',
       float: isLandscape ? 'left' : 'none',
       fontWeight: 700,
       display: 'inline-block',
@@ -148,8 +148,23 @@ class DateDisplay extends Component {
       day: '2-digit',
     }).format(selectedDate);
 
+    const ariaDateTime = new DateTimeFormat(locale, {
+      month: 'long',
+      weekday: 'long',
+      day: '2-digit',
+    }).format(selectedDate);
+
     return (
-      <div {...other} style={prepareStyles(styles.root, style)}>
+      <div
+        {...other}
+        style={prepareStyles(styles.root, style)}>
+        <div
+          style={{position: 'absolute', textIndent: -9999}}
+          aria-hidden="false"
+          role="status"
+        >
+          {`${ariaDateTime} ${year}`}
+        </div>
         <SlideInTransitionGroup style={styles.year} direction={this.state.transitionDirection}>
           <div key={year} style={styles.yearTitle} onTouchTap={this.handleTouchTapYear}>
             {year}
