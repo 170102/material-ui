@@ -4,7 +4,6 @@ import EventListener from 'react-event-listener';
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
-import deprecated from '../utils/deprecatedPropType';
 import keycode from 'keycode';
 
 
@@ -176,7 +175,6 @@ class DatePicker extends Component {
   };
 
   componentWillMount() {
-
     this.setState({
       date: this.isControlled() ? this.getControlledDate() : this.props.defaultDate,
     });
