@@ -556,11 +556,13 @@ class Menu extends Component {
           onWheel={this.handleOnWheel}
           style={prepareStyles(mergedRootStyles)}
           ref="scrollContainer"
+          role="presentation"
         >
           <List
             {...other}
             ref="list"
             style={mergedListStyles}
+            role="menu"
           >
             {newChildren}
           </List>
