@@ -247,7 +247,7 @@ class Popover extends Component {
     this.requestClose('clickAway');
   };
 
-  handleKeyDown = (event) => {
+  handleKeyDown = (e) => {
     const key = keycode(event);
     switch (key) {
       case 'esc':
