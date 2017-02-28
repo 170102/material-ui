@@ -239,6 +239,19 @@ class Popover extends Component {
     this.requestClose('clickAway');
   };
 
+  handleKeyDown = (e) => {
+    const key = keycode(event);
+    switch (key) {
+      case 'esc':
+        this.handleEscKeyDownMenu(e);
+        break;
+    }
+  }
+
+  handleEscKeyDownMenu = () => {
+    this.close(true);
+  };
+
   getAnchorPosition(el) {
     if (!el) {
       el = ReactDOM.findDOMNode(this);
@@ -411,6 +424,7 @@ class Popover extends Component {
           ref="layer"
           open={this.state.open}
           componentClickAway={this.componentClickAway}
+          onKeyDown={this.handleKeyDown}
           useLayerForClickAway={this.props.useLayerForClickAway}
           render={this.renderLayer}
         />
