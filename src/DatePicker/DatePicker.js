@@ -273,8 +273,23 @@ class DatePicker extends Component {
     const key = keycode(event);
     switch (key) {
       case 'tab':
-        if (this.state.keyboardActivated)
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+        if (this.state.keyboardActivated) {
+          const hasFocus = this.refs.input.input == document.activeElement;
+
+          console.log(hasFocus);
+
+          if (hasFocus && this.refs.dialogWindow.state.open) {
+            this.refs.input.input.blur();
+          } else if (this.refs.dialogWindow.state.open) {
+            this.refs.input.input.focus();
+          }
+
+          event.stopPropagation();
+          event.preventDefault();
+        }
+        break;
+      case 'esc':
+        this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
         break;
       case 'right':
       case 'left':
