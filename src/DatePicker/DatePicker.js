@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import EventListener from 'react-event-listener';
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
@@ -266,6 +267,32 @@ class DatePicker extends Component {
     this.handleAccept(tmpDate);
   }
 
+  handleWindowKeyDown = (event) => {
+    const key = keycode(event),
+      inputHasFocus = document.activeElement == this.refs.input.input;
+
+    switch (key) {
+      case 'tab':
+      case 'esc':
+        if (!inputHasFocus) {
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);            
+        }
+        break;
+      case 'up':
+      case 'down':
+      case 'left':
+      case 'right':
+        if (this.refs.dialogWindow.state.open
+          && !inputHasFocus) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        break;
+      default:
+        break;
+    }    
+  }
+
   handleKeyDown = (event) => {
     if (!this.shouldHandleKeyboard)
       return;
@@ -273,15 +300,25 @@ class DatePicker extends Component {
     const key = keycode(event);
     switch (key) {
       case 'tab':
-        if (this.state.keyboardActivated)
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+        if (this.state.keyboardActivated && this.refs.dialogWindow.state.open) {
+          if (event.shiftKey) {
+            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+          } else {
+            this.refs.input.blur();
+
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }
+        break;
+      case 'esc':
+        this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
         break;
       case 'right':
       case 'left':
       case 'up':
       case 'down':
         event.stopPropagation();
-        break;
     }
   }
 
@@ -424,6 +461,12 @@ class DatePicker extends Component {
           errorText={inputError}
           hintText={hintText}
         />
+        { this.shouldHandleKeyboard() ?
+          <EventListener
+            target="window"
+            onKeyDown={this.handleWindowKeyDown}
+          /> 
+        : null }
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
