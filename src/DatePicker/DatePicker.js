@@ -274,18 +274,24 @@ class DatePicker extends Component {
     switch (key) {
       case 'tab':
         if (this.state.keyboardActivated) {
-          const hasFocus = this.refs.input.input == document.activeElement;
+          if (event.shiftKey) {
+            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+            return;
+          }
 
-          console.log(hasFocus);
+          const hasFocus = this.refs.input.input == document.activeElement;
 
           if (hasFocus && this.refs.dialogWindow.state.open) {
             this.refs.input.input.blur();
+
+            event.stopPropagation();
+            event.preventDefault();
           } else if (this.refs.dialogWindow.state.open) {
             this.refs.input.input.focus();
-          }
 
-          event.stopPropagation();
-          event.preventDefault();
+            event.stopPropagation();
+            event.preventDefault();
+          }
         }
         break;
       case 'esc':
