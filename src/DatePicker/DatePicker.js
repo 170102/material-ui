@@ -294,6 +294,20 @@ class DatePicker extends Component {
       });
   }
 
+  handleWindowKeyDown = (event) => {
+    const key = keycode(event);
+    
+    switch (key) {
+      case 'tab':
+      case 'esc':
+        if (document.activeElement != this.refs.input.input) {
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);            
+        }
+      default:
+        break;
+    }    
+  }
+
   handleKeyDown = (event) => {
     if (!this.shouldHandleKeyboard)
       return;
