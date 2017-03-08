@@ -293,10 +293,7 @@ class DatePicker extends Component {
             this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
           } else {
             this.refs.input.blur();
-            ReactDOM.findDOMNode(this.refs.dialogWindow.refs.dialog).focus();
 
-            console.log(this.refs.dialogWindow);
-            
             event.preventDefault();
             event.stopPropagation();
           }
