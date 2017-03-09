@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import EventListener from 'react-event-listener';
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
@@ -266,6 +267,31 @@ class DatePicker extends Component {
     this.handleAccept(tmpDate);
   }
 
+  handleWindowKeyDown = (event) => {
+    const key = keycode(event),
+      inputHasFocus = document.activeElement == this.refs.input.input;
+
+    switch (key) {
+      case 'tab':
+      case 'esc':
+        if (!inputHasFocus) {
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);            
+        }
+        break;
+      case 'up':
+      case 'down':
+      case 'left':
+      case 'right':
+        if (this.refs.dialogWindow.state.open) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        break;
+      default:
+        break;
+    }    
+  }
+
   handleKeyDown = (event) => {
     if (!this.shouldHandleKeyboard)
       return;
@@ -273,19 +299,15 @@ class DatePicker extends Component {
     const key = keycode(event);
     switch (key) {
       case 'tab':
-        if (this.state.keyboardActivated) {
-          const hasFocus = this.refs.input.input == document.activeElement;
+        if (this.state.keyboardActivated && this.refs.dialogWindow.state.open) {
+          if (event.shiftKey) {
+            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+          } else {
+            this.refs.input.blur();
 
-          console.log(hasFocus);
-
-          if (hasFocus && this.refs.dialogWindow.state.open) {
-            this.refs.input.input.blur();
-          } else if (this.refs.dialogWindow.state.open) {
-            this.refs.input.input.focus();
+            event.preventDefault();
+            event.stopPropagation();
           }
-
-          event.stopPropagation();
-          event.preventDefault();
         }
         break;
       case 'esc':
@@ -296,7 +318,8 @@ class DatePicker extends Component {
       case 'up':
       case 'down':
         event.stopPropagation();
-        break;
+        event.preventDefault();
+        return false;
     }
   }
 
@@ -439,6 +462,12 @@ class DatePicker extends Component {
           errorText={inputError}
           hintText={hintText}
         />
+        { this.shouldHandleKeyboard() ?
+          <EventListener
+            target="window"
+            onKeyDown={this.handleWindowKeyDown}
+          /> 
+        : null }
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
