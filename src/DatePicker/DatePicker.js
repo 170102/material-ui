@@ -295,14 +295,25 @@ class DatePicker extends Component {
   }
 
   handleWindowKeyDown = (event) => {
-    const key = keycode(event);
-    
+    const key = keycode(event),
+      inputHasFocus = document.activeElement == this.refs.input.input;
+
     switch (key) {
       case 'tab':
       case 'esc':
-        if (document.activeElement != this.refs.input.input) {
+        if (!inputHasFocus) {
           this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);            
         }
+        break;
+      case 'up':
+      case 'down':
+      case 'left':
+      case 'right':
+        if (this.refs.dialogWindow.state.open) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        break;
       default:
         break;
     }    
@@ -335,22 +346,7 @@ class DatePicker extends Component {
       case 'up':
       case 'down':
         event.stopPropagation();
-    }
-  }
-
-  handleKeyUp = (event) => {
-    if (!this.shouldHandleKeyboard)
-      return;
-
-    const key = keycode(event);
-    switch (key) {
-      case 'enter':
-        if (this.refs.dialogWindow.state.open) {
-          event.stopPropagation();
-          event.preventDefault();
-          this.refs.dialogWindow.dismiss();
-        }
-        break;
+        event.preventDefault();
     }
   }
 
