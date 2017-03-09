@@ -343,6 +343,16 @@ class DatePicker extends Component {
         if (document.activeElement != this.refs.input.input) {
           this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
         }
+        break;
+      case 'up':
+      case 'down':
+      case 'left':
+      case 'right':
+        if (this.refs.dialogWindow.state.open) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        break;
       default:
         break;
     }
@@ -522,10 +532,12 @@ class DatePicker extends Component {
           errorText={inputError}
           hintText={hintText}
         />
-        <EventListener
-          target="window"
-          onKeyDown={this.handleWindowKeyDown}
-        />
+        { this.shouldHandleKeyboard() ?
+          <EventListener
+            target="window"
+            onKeyDown={this.handleWindowKeyDown}
+          />
+        : null }
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
