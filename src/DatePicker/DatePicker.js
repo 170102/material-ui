@@ -470,12 +470,10 @@ class DatePicker extends Component {
           errorText={inputError}
           hintText={hintText}
         />
-        { this.shouldHandleKeyboard() ?
-          <EventListener
-            target="window"
-            onKeyDown={this.handleWindowKeyDown}
-          />
-        : null }
+        <EventListener
+          target="window"
+          onKeyDown={this.handleWindowKeyDown}
+        />
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
