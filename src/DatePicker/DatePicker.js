@@ -526,6 +526,7 @@ class DatePicker extends Component {
           onDismiss={onDismiss}
           ref="dialogWindow"
           shouldDisableDate={shouldDisableDate}
+          showTooltip={showTooltip}
         />
       </div>
     );
