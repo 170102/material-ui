@@ -15,9 +15,7 @@ class CalendarActionButton extends Component {
 
     const styles = {
       root: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
+        float: 'right',
         margin: 0,
         maxHeight: 48,
         padding: 0,
