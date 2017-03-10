@@ -309,7 +309,8 @@ class DatePicker extends Component {
       case 'down':
       case 'left':
       case 'right':
-        if (this.refs.dialogWindow.state.open) {
+        if (this.refs.dialogWindow.state.open
+          && !inputHasFocus) {
           event.preventDefault();
           event.stopPropagation();
         }
