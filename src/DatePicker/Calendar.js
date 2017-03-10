@@ -42,6 +42,9 @@ class Calendar extends Component {
     onTouchTapOk: PropTypes.func,
     open: PropTypes.bool,
     shouldDisableDate: PropTypes.func,
+    tooltipTitle: PropTypes.string,
+    tooltipShiftLabel: PropTypes.string,
+    tooltipAltShiftLabel: PropTypes.string,
   };
 
   static defaultProps = {
@@ -248,10 +251,9 @@ class Calendar extends Component {
         color: calendarTextColor,
         userSelect: 'none',
         width: isLandscape ? 479 : 310,
+        overflow: 'hidden',
       },
       calendar: {
-        display: 'flex',
-        flexDirection: 'column',
       },
       calendarContainer: {
         display: 'flex',
@@ -271,6 +273,23 @@ class Calendar extends Component {
         marginTop: 10,
         overflow: 'hidden',
         width: 310,
+      },
+      tooltip: {
+        display: 'block',
+        float: 'left',
+        fontSize: 12,
+        fontWeight: 400,
+        height: this.props.mode === 'landscape' ? '20%' : 43,
+        lineHeight: '12px',
+        margin: '2px 8px 6px',
+      },
+      tooltipList: {
+        margin: 0,
+        padding: 0,
+        listStyle: 'none'
+      },
+      tooltipListItem: {
+        margin: '3px 0',
       },
       weekTitle: {
         display: 'flex',
@@ -302,6 +321,10 @@ class Calendar extends Component {
       okLabel,
       onTouchTapCancel, // eslint-disable-line no-unused-vars
       onTouchTapOk, // eslint-disable-line no-unused-vars
+      showTooltip,
+      tooltipTitle,
+      tooltipShiftLabel,
+      tooltipAltShiftLabel,
     } = this.props;
 
     return (
@@ -358,6 +381,15 @@ class Calendar extends Component {
           {!this.state.displayMonthDay &&
             <div style={prepareStyles(styles.yearContainer)}>
               {this.yearSelector()}
+            </div>
+          }
+          { showTooltip &&
+            <div style={styles.tooltip}>
+              <div>{tooltipTitle}</div>
+              <ul style={styles.tooltipList}>
+                <li style={styles.tooltipListItem}>{tooltipShiftLabel}</li>
+                <li style={styles.tooltipListItem}>{tooltipAltShiftLabel}</li>
+              </ul>
             </div>
           }
           {okLabel &&

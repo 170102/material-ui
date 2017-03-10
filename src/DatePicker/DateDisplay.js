@@ -10,7 +10,7 @@ function getStyles(props, context, state) {
   const styles = {
     root: {
       width: isLandscape ? 165 : '100%',
-      height: isLandscape ? 330 : 'auto',
+      height: isLandscape ? 335 : 'auto',
       float: isLandscape ? 'left' : 'none',
       fontWeight: 700,
       display: 'inline-block',

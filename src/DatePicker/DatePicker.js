@@ -149,6 +149,10 @@ class DatePicker extends Component {
      * Sets the date for the Date Picker programmatically.
      */
     value: PropTypes.object,
+    /**
+     * Tells the DatePicker whether the keyboard shortcut tooltip should display
+     */
+    showTooltip: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -157,6 +161,7 @@ class DatePicker extends Component {
     disabled: false,
     disableYearSelection: false,
     firstDayOfWeek: 1,
+    showTooltip: false,
     style: {},
   };
 
@@ -268,7 +273,7 @@ class DatePicker extends Component {
       case 'tab':
       case 'esc':
         if (!inputHasFocus) {
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);            
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
         }
         break;
       case 'up':
@@ -317,7 +322,7 @@ class DatePicker extends Component {
         break;
       default:
         break;
-    }    
+    }
   }
 
   handleKeyDown = (event) => {
@@ -460,6 +465,10 @@ class DatePicker extends Component {
       shouldDisableDate,
       style,
       textFieldStyle,
+      showTooltip,
+      tooltipTitle,
+      tooltipShiftLabel,
+      tooltipAltShiftLabel,
       ...other
     } = this.props;
 
@@ -494,7 +503,7 @@ class DatePicker extends Component {
           <EventListener
             target="window"
             onKeyDown={this.handleWindowKeyDown}
-          /> 
+          />
         : null }
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
