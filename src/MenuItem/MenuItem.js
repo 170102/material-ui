@@ -298,6 +298,7 @@ class MenuItem extends Component {
         leftIcon={leftIconElement}
         ref="listItem"
         rightIcon={rightIconElement}
+        role="menuitem"
         style={mergedRootStyles}
       >
         {children}
