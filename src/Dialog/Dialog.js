@@ -249,9 +249,22 @@ class DialogInline extends Component {
     this.requestClose(false);
   };
 
+  handleKeyDown = (event) => {
+    switch (keycode(event)) {
+      case 'tab':
+        if (!this.refs.dialogContainer.contains(document.activeElement)) {
+          this.refs.dialogActions.children[0].focus();
+          event.preventDefault();
+        }
+        break;
+    }
+  };
+
   handleKeyUp = (event) => {
-    if (keycode(event) === 'esc') {
-      this.requestClose(false);
+    switch (keycode(event)) {
+      case 'esc':
+        this.requestClose(false);
+        break;
     }
   };
 
@@ -290,8 +303,15 @@ class DialogInline extends Component {
     styles.title = Object.assign(styles.title, titleStyle);
 
     const actionsContainer = React.Children.count(actions) > 0 && (
-      <div className={actionsContainerClassName} style={prepareStyles(styles.actionsContainer)}>
-        {React.Children.toArray(actions)}
+      <div
+        ref="dialogActions"
+        className={actionsContainerClassName}
+        style={prepareStyles(styles.actionsContainer)}>
+        {React.Children.map(actions, (action) => {
+          return React.cloneElement(action, {
+            ref: `action-${action.props.key}`
+          });
+        })}
       </div>
     );
 
@@ -314,6 +334,7 @@ class DialogInline extends Component {
         {open &&
           <EventListener
             target="window"
+            onKeyDown={this.handleKeyDown}
             onKeyUp={this.handleKeyUp}
             onResize={this.handleResize}
           />
@@ -332,15 +353,17 @@ class DialogInline extends Component {
               style={styles.content}
             >
               <Paper zDepth={4}>
-                {titleElement}
-                <div
-                  ref="dialogContent"
-                  className={bodyClassName}
-                  style={prepareStyles(styles.body)}
-                >
-                  {children}
+                <div ref="dialogContainer">
+                  {titleElement}
+                  <div
+                    ref="dialogContent"
+                    className={bodyClassName}
+                    style={prepareStyles(styles.body)}
+                  >
+                    {children}
+                  </div>
+                  {actionsContainer}
                 </div>
-                {actionsContainer}
               </Paper>
             </TransitionItem>
           }
