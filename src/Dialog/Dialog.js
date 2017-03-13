@@ -249,21 +249,19 @@ class DialogInline extends Component {
     this.requestClose(false);
   };
 
-  handleKeyDown = (event) => {
-    switch (keycode(event)) {
-      case 'tab':
-        if (!this.refs.dialogContainer.contains(document.activeElement)) {
-          this.refs.dialogActions.children[0].focus();
-          event.preventDefault();
-        }
-        break;
-    }
-  };
-
   handleKeyUp = (event) => {
     switch (keycode(event)) {
       case 'esc':
         this.requestClose(false);
+        break;
+      case 'tab':
+        if (!this.refs.dialogContainer.contains(document.activeElement)) {
+	  const actionWrap = this.refs.dialogActions.children[0],
+		button = actionWrap.querySelector('button');
+			
+	  (button || actionWrap).focus();
+          event.preventDefault();
+        }
         break;
     }
   };
