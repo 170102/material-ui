@@ -323,8 +323,7 @@ class DatePicker extends Component {
       case 'down':
       case 'left':
       case 'right':
-        if (this.refs.dialogWindow.state.open
-          && !inputHasFocus) {
+        if (this.refs.dialogWindow.state.open) {
           event.preventDefault();
           event.stopPropagation();
         }
@@ -533,12 +532,10 @@ class DatePicker extends Component {
           errorText={inputError}
           hintText={hintText}
         />
-        { this.shouldHandleKeyboard() ?
-          <EventListener
-            target="window"
-            onKeyDown={this.handleWindowKeyDown}
-          />
-        : null }
+        <EventListener
+          target="window"
+          onKeyDown={this.handleWindowKeyDown}
+        />
         <DatePickerDialog
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
