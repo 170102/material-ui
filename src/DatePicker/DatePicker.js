@@ -273,32 +273,6 @@ class DatePicker extends Component {
       this.props.onFocus(event);
     }
   };
-
- handleWindowKeyDown = (event) => {
-    const key = keycode(event),
-      inputHasFocus = document.activeElement == this.refs.input.input;
-
-    switch (key) {
-      case 'tab':
-      case 'esc':
-        if (!inputHasFocus) {
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-        }
-        break;
-      case 'up':
-      case 'down':
-      case 'left':
-      case 'right':
-        if (this.refs.dialogWindow.state.open
-          && !inputHasFocus) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        break;
-      default:
-        break;
-    }    
-  }
   
   handleInputBlur = (event) => {
     if(this.state.keyboardActivated)
@@ -324,31 +298,6 @@ class DatePicker extends Component {
       case 'left':
       case 'right':
         if (this.refs.dialogWindow.state.open) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  handleWindowKeyDown = (event) => {
-    const key = keycode(event);
-
-    switch (key) {
-      case 'tab':
-      case 'esc':
-        if (document.activeElement != this.refs.input.input) {
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-        }
-        break;
-      case 'up':
-      case 'down':
-      case 'left':
-      case 'right':
-        if (this.refs.dialogWindow.state.open
-          && !inputHasFocus) {
           event.preventDefault();
           event.stopPropagation();
         }
