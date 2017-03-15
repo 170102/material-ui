@@ -256,10 +256,10 @@ class DialogInline extends Component {
         break;
       case 'tab':
         if (!this.refs.dialogContainer.contains(document.activeElement)) {
-          const actionWrap = this.refs.dialogActions.children[0],
-          button = actionWrap.querySelector('button');
-
-          (button || actionWrap).focus();
+	  const actionWrap = this.refs.dialogActions.children[0],
+		button = actionWrap.querySelector('button');
+			
+	  (button || actionWrap).focus();
           event.preventDefault();
         }
         break;
