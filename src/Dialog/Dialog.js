@@ -184,6 +184,14 @@ class DialogInline extends Component {
     this.positionDialog();
   }
 
+  componentWillUpdate(nextProps) {
+    if (nextProps.open) {
+      this.originalFocus = document.activeElement;
+    } else {
+      this.originalFocus.focus();
+    }
+  }
+
   positionDialog() {
     const {
       actions,
@@ -253,7 +261,14 @@ class DialogInline extends Component {
     switch (keycode(event)) {
       case 'tab':
         if (!this.refs.dialogContainer.contains(document.activeElement)) {
+<<<<<<< Updated upstream
           this.refs.dialogActions.children[0].focus();
+=======
+	  const actionWrap = this.refs.dialogActions.children[0],
+		button = actionWrap.querySelector('button');
+
+	  (button || actionWrap).focus();
+>>>>>>> Stashed changes
           event.preventDefault();
         }
         break;
@@ -488,6 +503,14 @@ class Dialog extends Component {
       <DialogInline {...this.props} />
     );
   };
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.open) {
+      this.originalFocus = document.activeElement;
+    } else {
+      setTimeout(() => this.originalFocus.focus(), 1);
+    }
+  }
 
   render() {
     return (
