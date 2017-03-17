@@ -184,6 +184,14 @@ class DialogInline extends Component {
     this.positionDialog();
   }
 
+  componentWillUpdate(nextProps) {
+    if (nextProps.open) {
+      this.originalFocus = document.activeElement;
+    } else {
+      this.originalFocus.focus();
+    }
+  }
+
   positionDialog() {
     const {
       actions,
@@ -256,10 +264,10 @@ class DialogInline extends Component {
         break;
       case 'tab':
         if (!this.refs.dialogContainer.contains(document.activeElement)) {
-	  const actionWrap = this.refs.dialogActions.children[0],
-		button = actionWrap.querySelector('button');
-			
-	  (button || actionWrap).focus();
+          const actionWrap = this.refs.dialogActions.children[0],
+          button = actionWrap.querySelector('button');
+
+          (button || actionWrap).focus();
           event.preventDefault();
         }
         break;
@@ -486,6 +494,14 @@ class Dialog extends Component {
       <DialogInline {...this.props} />
     );
   };
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.open) {
+      this.originalFocus = document.activeElement;
+    } else {
+      setTimeout(() => this.originalFocus.focus(), 1);
+    }
+  }
 
   render() {
     return (
