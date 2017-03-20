@@ -187,8 +187,9 @@ class DialogInline extends Component {
   componentWillUpdate(nextProps) {
     if (nextProps.open) {
       this.originalFocus = document.activeElement;
-    } else {
+    } else if (this.originalFocus) {
       this.originalFocus.focus();
+      this.originalFocus = null;
     }
   }
 
@@ -507,8 +508,11 @@ class Dialog extends Component {
   componentWillUpdate(nextProps) {
     if (nextProps.open) {
       this.originalFocus = document.activeElement;
-    } else {
-      setTimeout(() => this.originalFocus.focus(), 1);
+    } else if (this.originalFocus) {
+      setTimeout(() => {
+        this.originalFocus.focus();
+        this.originalFocus = null;
+      }, 1);
     }
   }
 
