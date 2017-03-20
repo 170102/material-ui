@@ -262,14 +262,10 @@ class DialogInline extends Component {
     switch (keycode(event)) {
       case 'tab':
         if (!this.refs.dialogContainer.contains(document.activeElement)) {
-<<<<<<< Updated upstream
-          this.refs.dialogActions.children[0].focus();
-=======
-	  const actionWrap = this.refs.dialogActions.children[0],
-		button = actionWrap.querySelector('button');
+          const actionWrap = this.refs.dialogActions.children[0],
+          button = actionWrap.querySelector('button');
 
-	  (button || actionWrap).focus();
->>>>>>> Stashed changes
+          (button || actionWrap).focus();
           event.preventDefault();
         }
         break;
