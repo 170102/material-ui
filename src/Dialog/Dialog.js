@@ -499,10 +499,12 @@ class Dialog extends Component {
   componentWillUpdate(nextProps) {
     if (nextProps.open) {
       this.originalFocus = document.activeElement;
-    } else if (this.originalFocus) {
+    } else {
       setTimeout(() => {
-        this.originalFocus.focus();
-        this.originalFocus = null;
+        if (this.originalFocus) {
+          this.originalFocus.focus();
+          this.originalFocus = null;
+        }
       }, 1);
     }
   }
