@@ -420,6 +420,19 @@ class Popover extends Component {
     return targetPosition;
   }
 
+ componentWillUpdate(nextProps) {
+    if (nextProps.open) {
+      this.originalFocus = this.originalFocus || document.activeElement;
+    } else {
+      setTimeout(() => {
+        if (this.originalFocus) {
+          this.originalFocus.focus();
+          this.originalFocus = null;
+        }
+      }, 1);
+    }
+  }
+
   render() {
     return (
       <div style={styles.root}>
