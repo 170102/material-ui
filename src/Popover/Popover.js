@@ -422,7 +422,6 @@ class Popover extends Component {
 
  componentWillUpdate(nextProps) {
     if (nextProps.open) {
-      console.log('y');
       this.originalFocus = document.activeElement;
     } else if (this.originalFocus) {
       setTimeout(() => {
