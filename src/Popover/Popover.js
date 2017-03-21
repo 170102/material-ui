@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import EventListener from 'react-event-listener';
+import keycode from 'keycode';
 import RenderToLayer from '../internal/RenderToLayer';
 import propTypes from '../utils/propTypes';
 import Paper from '../Paper';
@@ -208,7 +209,10 @@ class Popover extends Component {
       }
 
       return (
-        <Paper style={Object.assign(styleRoot, style)} {...other}>
+        <Paper
+          onKeyDown={this.handleKeyDown}
+          style={Object.assign(styleRoot, style)} {...other}
+        >
           {children}
         </Paper>
       );
@@ -223,7 +227,11 @@ class Popover extends Component {
         {...other}
         open={this.state.open && !this.state.closing}
       >
-        {children}
+        <div
+          onKeyDown={this.handleKeyDown}
+        >
+          {children}
+        </div>
       </Animation>
     );
   };
@@ -236,6 +244,19 @@ class Popover extends Component {
 
   componentClickAway = (event) => {
     event.preventDefault();
+    this.requestClose('clickAway');
+  };
+
+  handleKeyDown = (event) => {
+    const key = keycode(event);
+    switch (key) {
+      case 'esc':
+        this.handleEscKeyDownMenu(event);
+        break;
+    }
+  }
+
+  handleEscKeyDownMenu = () => {
     this.requestClose('clickAway');
   };
 
