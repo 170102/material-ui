@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import EventListener from 'react-event-listener';
 import keycode from 'keycode';
+import UniqueId from 'lodash.uniqueid';
 import transitions from '../styles/transitions';
 import Overlay from '../internal/Overlay';
 import RenderToLayer from '../internal/RenderToLayer';
@@ -176,6 +177,9 @@ class DialogInline extends Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
+  contentId = UniqueId("dialog");
+  contentTitleId = UniqueId("dialog_title");
+
   componentDidMount() {
     this.positionDialog();
   }
@@ -300,10 +304,11 @@ class DialogInline extends Component {
       titleElement = React.cloneElement(title, {
         className: title.props.className || titleClassName,
         style: prepareStyles(Object.assign(styles.title, title.props.style)),
+        id: this.contentTitleId
       });
     } else if (typeof title === 'string') {
       titleElement = (
-        <h3 className={titleClassName} style={prepareStyles(styles.title)}>
+        <h3 className={titleClassName} style={prepareStyles(styles.title)} id={this.contentTitleId}>
           {title}
         </h3>
       );
@@ -319,6 +324,9 @@ class DialogInline extends Component {
           />
         }
         <ReactTransitionGroup
+          role="dialog"
+          aria-labelledby={this.contentTitleId}
+          aria-describedby={this.contentId}
           component="div"
           ref="dialogWindow"
           transitionAppear={true}
@@ -335,6 +343,7 @@ class DialogInline extends Component {
                 {titleElement}
                 <div
                   ref="dialogContent"
+                  id={this.contentId}
                   className={bodyClassName}
                   style={prepareStyles(styles.body)}
                 >
