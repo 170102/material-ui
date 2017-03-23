@@ -130,6 +130,8 @@ class Tab extends Component {
     return (
       <EnhancedButton
         {...other}
+        role="tab"
+        aria-selected={selected}
         style={Object.assign(styles.root, style)}
         focusRippleColor={rippleColor}
         touchRippleColor={rippleColor}
