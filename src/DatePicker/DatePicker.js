@@ -324,7 +324,6 @@ class DatePicker extends Component {
         event.stopPropagation();
         break;
       case 'up':
-        console.log('up');
         if (this.refs.dialogWindow.state.open)
           this.refs.dialogWindow.dismiss();
         break;
