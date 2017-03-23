@@ -321,9 +321,18 @@ class DatePicker extends Component {
         break;
       case 'right':
       case 'left':
-      case 'up':
-      case 'down':
         event.stopPropagation();
+        break;
+      case 'up':
+        console.log('up');
+        if (this.refs.dialogWindow.state.open)
+          this.refs.dialogWindow.dismiss();
+        break;
+      case 'down':
+        if (!this.refs.dialogWindow.state.open)
+          this.refs.dialogWindow.show();
+        event.stopPropagation();
+        break;
     }
   }
 
@@ -344,10 +353,6 @@ class DatePicker extends Component {
   }
 
   handleInputChange = (event) => {
-    if (!this.refs.dialogWindow.state.open) {
-      this.refs.dialogWindow.show();
-    }
-
     const filtered = event.target.value.replace(/[^0-9\-\/]/gi, '').replace('/', '-');
     let dt = undefined;
     if (filtered.length === 10) {
