@@ -6,7 +6,7 @@ const styles = {
   textAlign: 'initial',
 };
 
-const TabTemplate = ({children, selected, style}) => {
+const TabTemplate = ({children, selected, style, ...other}) => {
   const templateStyle = Object.assign({}, styles, style);
   if (!selected) {
     templateStyle.height = 0;
@@ -14,7 +14,7 @@ const TabTemplate = ({children, selected, style}) => {
   }
 
   return (
-    <div style={templateStyle}>
+    <div {... other} style={templateStyle}>
       {children}
     </div>
   );

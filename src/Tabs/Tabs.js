@@ -6,6 +6,7 @@ import React, {Component,
   PropTypes,
 } from 'react';
 import warning from 'warning';
+import uniqueId from 'lodash.uniqueid';
 import TabTemplate from './TabTemplate';
 import InkBar from './InkBar';
 
@@ -87,7 +88,7 @@ class Tabs extends Component {
   };
 
   state = {selectedIndex: 0};
-
+  tabPanelId = uniqueId('tabPanel_');
   componentWillMount() {
     const valueLink = this.getValueLink(this.props);
     const initialIndex = this.props.initialSelectedIndex;
@@ -204,19 +205,31 @@ class Tabs extends Component {
         does not have a value prop. Needs value if Tabs is going
         to be a controlled component.`);
 
+      const tabId = `${this.tabPanelId}_tab_${index}`;
+      const tabContentId = `${this.tabPanelId}_tabContent_${index}`;
+      const isSelected = this.getSelected(tab, index);
+
       tabContent.push(tab.props.children ?
         createElement(tabTemplate || TabTemplate, {
           key: index,
-          selected: this.getSelected(tab, index),
+          selected: isSelected,
           style: tabTemplateStyle,
+          id: tabContentId,
+          role: 'tabpanel',
+          'aria-labelledby': tabId,
+          'aria-hidden': !isSelected,
         }, tab.props.children) : undefined);
 
       return cloneElement(tab, {
         key: index,
         index: index,
-        selected: this.getSelected(tab, index),
+        id: tabId,
+        selected: isSelected,
         width: `${width}%`,
         onTouchTap: this.handleTabTouchTap,
+        role: 'tab',
+        'aria-controls': tabContentId,
+        'aria-selected': isSelected,
       });
     });
 
