@@ -1,7 +1,88 @@
 ## HEAD
 
+## 0.17.1
+
+###### _Mar 12, 2017_
+
+A big thanks to the 20 contributors who are making this release possible.
+
+##### Component Fixes / Enhancements
+
+- [Chip] Add containerElement property (#6237) @blmarket
+- [DatePicker] Add option to hide date display (#6161) @dhoward
+- [EnhancedButton] Speed up unmount (#6164) @fzaninotto
+- [EnhancedSwitch] Remove dead "toggled" property (#6182) @Shahrukh-Zindani
+- [FlatButton] Add fullWidth property (#6135) @Shahrukh-Zindani
+- [FloatingActionButton] Fix disabledColor warning in console (#6178) @Shahrukh-Zindani
+- [MenuItem] Add an anchorOrigin property for the nested items (#6079) @skylerfenn
+- [Menu] Fix disabled MenuItem with props.menuItemStyle (#6203) @tomchentw
+- [LinearProgress] Reduce delay before indeterminate animation begins (#6230) @lawrence-yu
+- [SelectField] Fix TouchRipple effect when SelectField is disabled (#6286) @solkaz
+- [SelectField][DropDownMenu] Prevent label from resizing parents (#6200) @JessThrysoee
+- [SelectField][DropDownMenu] Support multi select (#6165) @JessThrysoee
+- [TextField] sync height with shadow when `rowsMax` changed (#6297) @seasick
+- [Theme] Move borderRadius into a theme constant (#6233) @samdroid-apps
+- [Toolbar] Allow node to be used in text property (#6282) @oliviertassinari
+
+##### Docs
+
+- [Button] Expose disableTouchRipple (#6234) @oshalygin
+- [FlatButton] Add className property (#6148) @Shahrukh-Zindani
+- [ListItem] Documents containerElement, changes ref to use callback (#6204) @lourd
+- [Showcase] Add SlimChess to showcase (#6225) @larrxu
+- [docs] Add onTouchTap documentation for FlatButton (#6147) @Shahrukh-Zindani
+- [docs] Add onTouchTap documentation for FloatingActionButton (#6172) @Shahrukh-Zindani
+- [docs] Add onTouchTap documentation for IconButton (#6174) @Shahrukh-Zindani
+- [docs] Add onTouchTap documentation for RaisedButton (#6171) @Shahrukh-Zindani
+- [docs] Add explanation for using font icon in a local project (#6198) @Shahrukh-Zindani
+- [docs] Add documentation for containerElement in FlatButon (#6210) @Shahrukh-Zindani
+- [docs] Add documentation for containerElement in RaisedButon (#6199) @Shahrukh-Zindani
+- [docs] Update usage.md (#6207) @dhruvdutt
+- [docs] Add a link to clarify the use of font icons in IconButton (#6197) @Shahrukh-Zindani
+- [docs] Update ROADMAP.md (#6319) @antmdvs
+
+##### Core
+
+- [issue] Update the webpackbin link (18e9c494e0c5c331b1e949856f2dbe8c77b62c77) @oliviertassinari
+
+
+## 0.17.0
+###### _Feb 12, 2017_
+
+A big thanks to the 17 contributors who are making this release possible.
+
 ##### Breaking Changes
-- [core] include `react-tap-event-plugin@^2.0.0` for `react@^15.4.0` (#5572)
+- [core] Upgrade react-tap-event-plugin and react peer dependency (#6057) @rosskevin
+
+We have upgraded the peer dependency of Material-UI. You gonna need:
+- `react-tap-event-plugin` >= 2.0.1
+- `react` >= 15.4.0
+- `react-dom` >= 15.4.0
+
+##### Component Fixes / Enhancements
+
+- [Tooltip] Add support for horizontalPosition="right" (#6072) @LeeKevin
+- [RadioButton] Fix circular dependency (#6055) @joaogranado
+- [Stepper] Add font family from base theme (#5943) @ysds
+- [Popover] Fix re-opening animated popover (#5984) @kib357
+- [EnhancedButton] Fix bleeding animation (#6027) @ArcanisCz
+- [DropDownMenu] Allow custom FontIcon child (#6028) @ArcanisCz
+
+##### Docs
+
+- [docs] Fix typo for the Divider's page (#6085) @meganetaaan
+- [docs] Add rating component to related-projects (#6018) @saschb2b
+- [docs] Add a chrome extension example to the showcase (#5994) @xinghengwang
+- [docs] Add source-code IconButton to Showcase (#5980) @mbrookes
+- [docs] Fix FlatButton example Firefox behavior (#5933) @MustD
+- [docs] Update Flat/Raised Button with SVG's description (#5981) @oshalygin
+- [Toggle] Update docs (#5941) @GusRuss89
+
+##### Core
+
+- [core] Fix npm scripts for windows - proper cross-env (#6086) @ArcanisCz
+- [eslint] Fix errors & warnings & deprecations (#6030) @ArcanisCz
+- [colorManipulator] Add warning to decomposeColor (#5939) @gyfis
 
 ## 0.16.7
 ###### _Jan 15, 2017_
