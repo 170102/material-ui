@@ -125,6 +125,7 @@ class DatePickerDialog extends Component {
       hideCalendarDate,
       style, // eslint-disable-line no-unused-vars
       animation,
+      useLayerForClickAway,
       ...other
     } = this.props;
 
