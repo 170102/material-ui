@@ -224,7 +224,7 @@ class SelectField extends Component {
         onBlur={onBlur}
         id={id}
         role="menu"
-        aria-label={hintText || floatingLabelText}
+        aria-label={floatingLabelText || hintText}
         underlineDisabledStyle={underlineDisabledStyle}
         underlineFocusStyle={underlineFocusStyle}
       >
