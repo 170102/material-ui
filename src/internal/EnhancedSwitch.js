@@ -119,6 +119,10 @@ class EnhancedSwitch extends Component {
     }
   }
 
+  componentWillMount() {
+    this.switchId = uniqueId(`switch_${this.props.value}`);
+  }
+
   componentWillReceiveProps(nextProps) {
     const hasCheckedProp = nextProps.hasOwnProperty('checked');
     const hasNewDefaultProp =
@@ -248,8 +252,6 @@ class EnhancedSwitch extends Component {
       this.props.onFocus(event);
     }
   };
-
-  switchId = uniqueId('switch');
 
   render() {
     const {
