@@ -53,16 +53,9 @@
     "lodash.merge": "^4.6.0",
     "lodash.throttle": "^4.1.1",
     "lodash.uniqueid": "^4.0.1",
-<<<<<<< HEAD
-    "react-addons-create-fragment": "^15.0.0",
-    "react-addons-transition-group": "^15.0.0",
-    "react-event-listener": "^0.4.0",
-=======
-    "react": "^15.4.2",
     "react-addons-create-fragment": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",
     "react-event-listener": "^0.4.2",
->>>>>>> 170102/scrb-selectfield
     "recompose": "^0.22.0",
     "simple-assign": "^0.1.0",
     "warning": "^3.0.0"
