@@ -221,7 +221,7 @@ class Snackbar extends Component {
 
     return (
       <ClickAwayListener onClickAway={open ? this.componentClickAway : null}>
-        <div {...other} role="dialog" aria-describedby={this.contentId} {...openAttr} style={prepareStyles(Object.assign(styles.root, style))}>
+        <div {...other} role="dialog" aria-live="polite" aria-describedby={this.contentId} {...openAttr} style={prepareStyles(Object.assign(styles.root, style))}>
           <SnackbarBody
             action={action}
             contentId={this.contentId}
