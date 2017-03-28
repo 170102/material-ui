@@ -291,7 +291,8 @@ class DropDownMenu extends Component {
     this.close(false);
   };
 
-  handleEscKeyDownMenu = () => {
+  handleEscKeyDownMenu = (event) => {
+    event.preventDefault();
     this.close(true);
   };
 
@@ -465,21 +466,23 @@ class DropDownMenu extends Component {
           animated={animated}
           onRequestClose={this.handleRequestCloseMenu}
         >
-          <Menu
-            multiple={multiple}
-            maxHeight={maxHeight}
-            desktop={true}
-            value={value}
-            onEscKeyDown={this.handleEscKeyDownMenu}
-            style={menuStyle}
-            listStyle={listStyle}
-            onItemTouchTap={this.handleItemTouchTap}
-            onChange={this.handleChange}
-            menuItemStyle={menuItemStyle}
-            selectedMenuItemStyle={selectedMenuItemStyle}
-          >
-            {children}
-          </Menu>
+          {
+            open &&
+            <Menu
+              multiple={multiple}
+              maxHeight={maxHeight}
+              desktop={true}
+              value={value}
+              onEscKeyDown={this.handleEscKeyDownMenu}
+              style={menuStyle}
+              listStyle={listStyle}
+              onItemTouchTap={this.handleItemTouchTap}
+              menuItemStyle={menuItemStyle}
+              selectedMenuItemStyle={selectedMenuItemStyle}
+            >
+              {children}
+            </Menu>
+          }
         </Popover>
       </div>
     );
