@@ -18,6 +18,7 @@ class DatePickerDialog extends Component {
     containerStyle: PropTypes.object,
     disableYearSelection: PropTypes.bool,
     firstDayOfWeek: PropTypes.number,
+    hideCalendarDate: PropTypes.bool,
     initialDate: PropTypes.object,
     locale: PropTypes.string,
     maxDate: PropTypes.object,
@@ -128,13 +129,14 @@ class DatePickerDialog extends Component {
       onDismiss, // eslint-disable-line no-unused-vars
       onShow, // eslint-disable-line no-unused-vars
       shouldDisableDate,
-      useLayerForClickAway,
+      hideCalendarDate,
       style, // eslint-disable-line no-unused-vars
       animation,
       showTooltip,
       tooltipTitle,
       tooltipShiftLabel,
       tooltipAltShiftLabel,
+      useLayerForClickAway,
       ...other
     } = this.props;
 
@@ -142,12 +144,12 @@ class DatePickerDialog extends Component {
 
     const styles = {
       dialogContent: {
-        width: mode === 'landscape' ? 479 : 310,
+        width: (!hideCalendarDate && mode === 'landscape') ? 479 : 310,
       },
       dialogBodyContent: {
         padding: 0,
-        minHeight: mode === 'landscape' ? 330 : 434,
-        minWidth: mode === 'landscape' ? 479 : 310,
+        minHeight: (hideCalendarDate || mode === 'landscape') ? 330 : 434,
+        minWidth: (hideCalendarDate || mode !== 'landscape') ? 310 : 479,
       },
     };
 
@@ -193,6 +195,7 @@ class DatePickerDialog extends Component {
             tooltipTitle={tooltipTitle}
             tooltipShiftLabel={tooltipShiftLabel}
             tooltipAltShiftLabel={tooltipAltShiftLabel}
+            hideCalendarDate={hideCalendarDate}
           />
         </Container>
       </div>

@@ -31,6 +31,7 @@ class Calendar extends Component {
     cancelLabel: PropTypes.node,
     disableYearSelection: PropTypes.bool,
     firstDayOfWeek: PropTypes.number,
+    hideCalendarDate: PropTypes.bool,
     initialDate: PropTypes.object,
     locale: PropTypes.string.isRequired,
     maxDate: PropTypes.object,
@@ -242,6 +243,7 @@ class Calendar extends Component {
 
   render() {
     const {prepareStyles} = this.context.muiTheme;
+    const {hideCalendarDate} = this.props;
     const toolbarInteractions = this.getToolbarInteractions();
     const isLandscape = this.props.mode === 'landscape';
     const {calendarTextColor} = this.context.muiTheme.datePicker;
@@ -333,16 +335,18 @@ class Calendar extends Component {
           target="window"
           onKeyDown={this.handleWindowKeyDown}
         />
-        <DateDisplay
-          DateTimeFormat={DateTimeFormat}
-          disableYearSelection={this.props.disableYearSelection}
-          onTouchTapMonthDay={this.handleTouchTapDateDisplayMonthDay}
-          onTouchTapYear={this.handleTouchTapDateDisplayYear}
-          locale={locale}
-          monthDaySelected={this.state.displayMonthDay}
-          mode={this.props.mode}
-          selectedDate={this.state.selectedDate}
-        />
+        {!hideCalendarDate &&
+          <DateDisplay
+            DateTimeFormat={DateTimeFormat}
+            disableYearSelection={this.props.disableYearSelection}
+            onTouchTapMonthDay={this.handleTouchTapDateDisplayMonthDay}
+            onTouchTapYear={this.handleTouchTapDateDisplayYear}
+            locale={locale}
+            monthDaySelected={this.state.displayMonthDay}
+            mode={this.props.mode}
+            selectedDate={this.state.selectedDate}
+          />
+        }
         <div style={prepareStyles(styles.calendar)}>
           {this.state.displayMonthDay &&
             <div style={prepareStyles(styles.calendarContainer)}>
