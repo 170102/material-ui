@@ -447,6 +447,8 @@ class DropDownMenu extends Component {
             ref={(node) => {
               this.arrowNode = node;
             }}
+            role="menuitem"
+            aria-label={displayValue}
             style={Object.assign({}, styles.icon, iconStyle)}
             iconStyle={styles.iconChildren}
           >
