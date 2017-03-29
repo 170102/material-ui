@@ -27,6 +27,7 @@
     "build:es-index": " cross-env BABEL_ENV=es babel ./src/index.js --out-file ./build/index.es.js",
     "build:es-icon-index": "cross-env BABEL_ENV=es babel ./src/svg-icons/index.js --out-file ./build/svg-icons/index.es.js",
     "build:babel": "cross-env NODE_ENV=release babel ./src --out-dir ./build --ignore spec.js",
+    "build:custom": "babel ./src --out-dir ./build-custom --ignore spec.js",
     "build:copy-files": "babel-node ./scripts/copy-files.js",
     "clean:build": "rimraf build",
     "lint": "eslint src docs/src test --quiet --cache && echo \"eslint: no lint errors\"",
