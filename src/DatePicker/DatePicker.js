@@ -291,11 +291,11 @@ class DatePicker extends Component {
       inputHasFocus = document.activeElement == this.refs.input.input;
 
     switch (key) {
-      case 'tab':
+      // case 'tab':
       case 'esc':
-        if (!inputHasFocus) {
+        // if (!inputHasFocus) {
           this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-        }
+        // }
         break;
       case 'up':
       case 'down':
@@ -320,15 +320,20 @@ class DatePicker extends Component {
     switch (key) {
       case 'tab':
         if (this.refs.dialogWindow.state.open) {
-          if (event.shiftKey) {
-            this.setState({keyboardActivated: false});
-            this.refs.dialogWindow.dismiss();
-          } else {
-            this.refs.input.blur();
+          // if (event.shiftKey) {
+          //   this.setState({keyboardActivated: false});
+          //   this.refs.dialogWindow.dismiss();
+          // } else {
+            if (!ReactDOM.findDOMNode(this.refs.dialogWindow).contains(document.activeElement)) {
+              this.refs.dialogWindow.focus();
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            // this.refs.input.blur();
 
-            event.preventDefault();
-            event.stopPropagation();
-          }
+            // event.preventDefault();
+            // event.stopPropagation();
+          // }
         }
         break;
       case 'esc':
@@ -491,6 +496,7 @@ class DatePicker extends Component {
           onKeyDown={this.handleWindowKeyDown}
         />
         <DatePickerDialog
+          tabIndex={this.shouldHandleKeyboard() ? 0 : 1}
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
           useLayerForClickAway={!this.shouldHandleKeyboard()}

@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import EventListener from 'react-event-listener';
 import keycode from 'keycode';
 import transitions from '../styles/transitions';
@@ -94,7 +95,7 @@ class Calendar extends Component {
       return false;
     }
 
-    return this.refs.calendar.isSelectedDateDisabled();
+    return this.calendarMonth.isSelectedDateDisabled();
   }
 
   addSelectedDays(days) {
@@ -145,6 +146,11 @@ class Calendar extends Component {
     if (this.props.onTouchTapDay) this.props.onTouchTapDay(event, date);
   };
 
+  handleKeyboardFocusDay = (event, keyboardFocused, date) => {
+    this.setSelectedDate(date);
+    if (this.props.keybaordFocusDay) this.props.keybaordFocusDay(event, keyboardFocused, date);
+  }
+
   handleMonthChange = (months) => {
     this.setState({
       transitionDirection: months >= 0 ? 'left' : 'right',
@@ -181,6 +187,17 @@ class Calendar extends Component {
   handleWindowKeyDown = (event) => {
     if (this.props.open) {
       switch (keycode(event)) {
+        case 'tab':
+          // if (calendarMonthNode && calendarMonthNode.contains(document.activeElement)) {
+          //   if (event.shiftKey) {
+          //     ReactDOM.findDOMNode(this.toolbar.nextButton).focus();
+          //   } else {
+          //     this.actions.focus();
+          //   }
+          //   event.preventDefault();
+          //   event.stopPropagation();
+          // }
+          break;
         case 'up':
           if (event.altKey && event.shiftKey) {
             this.addSelectedYears(-1);
@@ -239,6 +256,10 @@ class Calendar extends Component {
       );
     }
   }
+
+  focus = () => {
+    this.toolbar.focus();
+  };
 
   render() {
     const {prepareStyles} = this.context.muiTheme;
@@ -322,6 +343,7 @@ class Calendar extends Component {
       onTouchTapCancel, // eslint-disable-line no-unused-vars
       onTouchTapOk, // eslint-disable-line no-unused-vars
       showTooltip,
+      tabIndex,
       tooltipTitle,
       tooltipShiftLabel,
       tooltipAltShiftLabel,
@@ -347,6 +369,8 @@ class Calendar extends Component {
           {this.state.displayMonthDay &&
             <div style={prepareStyles(styles.calendarContainer)}>
               <CalendarToolbar
+                ref={(el) => this.toolbar = el}
+                tabIndex={tabIndex}
                 DateTimeFormat={DateTimeFormat}
                 locale={locale}
                 displayDate={this.state.displayDate}
@@ -354,28 +378,32 @@ class Calendar extends Component {
                 prevMonth={toolbarInteractions.prevMonth}
                 nextMonth={toolbarInteractions.nextMonth}
               />
-              <div style={prepareStyles(styles.weekTitle)}>
-                {daysArray.map((event, i) => (
-                  <span key={i} style={weekTitleDayStyle}>
-                    {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
-                  </span>
-                ))}
+              <div role="grid">
+                <div role="row" style={prepareStyles(styles.weekTitle)}>
+                  {daysArray.map((event, i) => (
+                    <span role="columnheading" key={i} style={weekTitleDayStyle}>
+                      {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
+                    </span>
+                  ))}
+                </div>
+                <SlideInTransitionGroup role="presentation" direction={this.state.transitionDirection} style={styles.transitionSlide}>
+                  <CalendarMonth
+                    role="presentation"
+                    DateTimeFormat={DateTimeFormat}
+                    locale={locale}
+                    displayDate={this.state.displayDate}
+                    firstDayOfWeek={this.props.firstDayOfWeek}
+                    key={this.state.displayDate.toDateString()}
+                    minDate={minDate}
+                    maxDate={maxDate}
+                    onTouchTapDay={this.handleTouchTapDay}
+                    onKeyboardFocusDay={this.handleKeyboardFocusDay}
+                    ref={(el) => this.calendarMonth = el}
+                    selectedDate={this.state.selectedDate}
+                    shouldDisableDate={this.props.shouldDisableDate}
+                  />
+                </SlideInTransitionGroup>
               </div>
-              <SlideInTransitionGroup direction={this.state.transitionDirection} style={styles.transitionSlide}>
-                <CalendarMonth
-                  DateTimeFormat={DateTimeFormat}
-                  locale={locale}
-                  displayDate={this.state.displayDate}
-                  firstDayOfWeek={this.props.firstDayOfWeek}
-                  key={this.state.displayDate.toDateString()}
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  onTouchTapDay={this.handleTouchTapDay}
-                  ref="calendar"
-                  selectedDate={this.state.selectedDate}
-                  shouldDisableDate={this.props.shouldDisableDate}
-                />
-              </SlideInTransitionGroup>
             </div>
           }
           {!this.state.displayMonthDay &&
@@ -394,6 +422,7 @@ class Calendar extends Component {
           }
           {okLabel &&
             <CalendarActionButtons
+              ref={(el) => this.actions = el}
               autoOk={this.props.autoOk}
               cancelLabel={cancelLabel}
               okLabel={okLabel}
