@@ -353,6 +353,7 @@ class DialogInline extends Component {
         }
         <ReactTransitionGroup
           role="dialog"
+          aria-live="assertive"
           aria-labelledby={this.contentTitleId}
           aria-describedby={this.contentId}
           component="div"
