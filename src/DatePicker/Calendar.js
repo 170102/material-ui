@@ -381,7 +381,12 @@ class Calendar extends Component {
               <div role="grid">
                 <div role="row" style={prepareStyles(styles.weekTitle)}>
                   {daysArray.map((event, i) => (
-                    <span role="columnheading" key={i} style={weekTitleDayStyle}>
+                    <span
+                      role="columnheading"
+                      key={i}
+                      style={weekTitleDayStyle}
+                      title={localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek, 'long')}
+                    >
                       {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
                     </span>
                   ))}

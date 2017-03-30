@@ -101,9 +101,6 @@ class CalendarToolbar extends Component {
           <div
             key={dateTimeFormatted}
             style={styles.titleText}
-            aria-live="assertive"
-            aria-atomic="true"
-            role="heading"
           >
             {dateTimeFormatted}
           </div>

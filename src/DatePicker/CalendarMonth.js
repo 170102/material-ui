@@ -62,6 +62,12 @@ class CalendarMonth extends Component {
     }, this);
   }
 
+  handleTouchTapDay = (event, date) => {
+    if (this.props.onTouchTapDay) {
+      this.props.onTouchTapDay(event, date);
+    }
+  };
+
   getDayElements(week, i) {
     const {
       DateTimeFormat,
@@ -95,7 +101,7 @@ class CalendarMonth extends Component {
 
   render() {
     return (
-      <div role="rowgroup" style={styles.root}>
+      <div role="presentation" style={styles.root}>
         {this.getWeekElements()}
       </div>
     );
