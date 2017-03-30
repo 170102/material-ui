@@ -99,6 +99,7 @@ class CalendarToolbar extends Component {
           style={styles.titleDiv}
         >
           <div
+            role="status"
             key={dateTimeFormatted}
             style={styles.titleText}
           >
