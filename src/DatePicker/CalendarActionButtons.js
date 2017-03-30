@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import FlatButton from '../FlatButton';
 
 class CalendarActionButton extends Component {
@@ -8,6 +9,12 @@ class CalendarActionButton extends Component {
     okLabel: PropTypes.node,
     onTouchTapCancel: PropTypes.func,
     onTouchTapOk: PropTypes.func,
+  };
+
+  focus = () => {
+    const cancelButton = ReactDOM.findDOMNode(this.refs.cancelButton);
+    if (cancelButton)
+      ReactDOM.findDOMNode(cancelButton).focus();
   };
 
   render() {
@@ -32,6 +39,7 @@ class CalendarActionButton extends Component {
     return (
       <div style={styles.root} >
         <FlatButton
+          ref="cancelButton"
           label={cancelLabel}
           onTouchTap={this.props.onTouchTapCancel}
           primary={true}

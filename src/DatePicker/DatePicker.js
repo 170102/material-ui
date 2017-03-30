@@ -239,17 +239,6 @@ class DatePicker extends Component {
   shouldHandleKeyboard = () => {
     return this.props.keyboardEnabled &&
       !this.props.disabled &&
-      this.props.container === 'inline' &&
-      !this.isControlled();
-  }
-
-  shouldHandleKeyboard = () => {
-    return !this.props.disabled && this.props.container == 'inline' && !this.isControlled();
-  }
-
-  shouldHandleKeyboard = () => {
-    return this.props.keyboardEnabled &&
-      !this.props.disabled &&
       this.props.container === 'inline';
   }
 
@@ -384,9 +373,20 @@ class DatePicker extends Component {
     }
   }
 
-  handleInputBlur = () => {
-    const tmpDate = this.state.date instanceof Date ? this.state.date : undefined;
-    this.handleAccept(tmpDate);
+  handleInputBlur = (event) => {
+    if(this.state.keyboardActivated) {
+      this.setState({
+        keyboardActivated: false,
+        date: this.state.date instanceof Date ? this.state.date : undefined,
+      });
+    }
+  }
+
+  handleClick = (event) => {
+    if (this.shouldHandleKeyboard() && this.refs.dialogWindow.state.open) {
+      event.stopPropagation();
+      return;
+    }
   }
 
   handleWindowKeyDown = (event) => {
@@ -394,11 +394,11 @@ class DatePicker extends Component {
       inputHasFocus = document.activeElement == this.refs.input.input;
 
     switch (key) {
-      case 'tab':
+      // case 'tab':
       case 'esc':
-        if (!inputHasFocus) {
+        // if (!inputHasFocus) {
           this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-        }
+        // }
         break;
       case 'up':
       case 'down':
@@ -416,21 +416,27 @@ class DatePicker extends Component {
   }
 
   handleKeyDown = (event) => {
-    if (!this.shouldHandleKeyboard)
+    if (!this.shouldHandleKeyboard())
       return;
 
     const key = keycode(event);
     switch (key) {
       case 'tab':
-        if (this.state.keyboardActivated && this.refs.dialogWindow.state.open) {
-          if (event.shiftKey) {
-            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-          } else {
-            this.refs.input.blur();
+        if (this.refs.dialogWindow.state.open) {
+          // if (event.shiftKey) {
+          //   this.setState({keyboardActivated: false});
+          //   this.refs.dialogWindow.dismiss();
+          // } else {
+            if (!ReactDOM.findDOMNode(this.refs.dialogWindow).contains(document.activeElement)) {
+              this.refs.dialogWindow.focus();
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            // this.refs.input.blur();
 
-            event.preventDefault();
-            event.stopPropagation();
-          }
+            // event.preventDefault();
+            // event.stopPropagation();
+          // }
         }
         break;
       case 'esc':
@@ -438,14 +444,26 @@ class DatePicker extends Component {
         break;
       case 'right':
       case 'left':
-      case 'up':
-      case 'down':
         event.stopPropagation();
+        break;
+      case 'up':
+        if (this.refs.dialogWindow.state.open) {
+          this.refs.dialogWindow.dismiss();
+          event.preventDefault();
+        }
+        break;
+      case 'down':
+        if (!this.refs.dialogWindow.state.open) {
+          this.refs.dialogWindow.show();
+          event.preventDefault();
+        }
+        event.stopPropagation();
+        break;
     }
   }
 
   handleKeyUp = (event) => {
-    if (!this.shouldHandleKeyboard)
+    if (!this.shouldHandleKeyboard())
       return;
 
     const key = keycode(event);
@@ -461,10 +479,6 @@ class DatePicker extends Component {
   }
 
   handleInputChange = (event) => {
-    if (!this.refs.dialogWindow.state.open) {
-      this.refs.dialogWindow.show();
-    }
-
     const filtered = event.target.value.replace(/[^0-9\-\/]/gi, '').replace('/', '-');
     let dt = undefined;
     if (filtered.length === 10) {
@@ -478,13 +492,6 @@ class DatePicker extends Component {
     this.setState({
       date: !dt || isNaN(dt.getTime()) ? filtered : dt,
     });
-  }
-
-  handleClick = (event) => {
-    if (this.shouldHandleKeyboard() && this.refs.dialogWindow.state.open) {
-      event.stopPropagation();
-      return;
-    }
   }
 
   handleTouchTap = (event) => {
@@ -593,6 +600,7 @@ class DatePicker extends Component {
           onKeyDown={this.handleWindowKeyDown}
         />
         <DatePickerDialog
+          tabIndex={this.shouldHandleKeyboard() ? 0 : 1}
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
           useLayerForClickAway={!this.shouldHandleKeyboard()}

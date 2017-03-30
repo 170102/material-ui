@@ -33,6 +33,7 @@ class CalendarMonth extends Component {
     maxDate: PropTypes.object,
     minDate: PropTypes.object,
     onTouchTapDay: PropTypes.func,
+    onKeyboardFocusDay: PropTypes.func,
     selectedDate: PropTypes.object.isRequired,
     shouldDisableDate: PropTypes.func,
   };
@@ -40,12 +41,6 @@ class CalendarMonth extends Component {
   isSelectedDateDisabled() {
     return this.selectedDateDisabled;
   }
-
-  handleTouchTapDay = (event, date) => {
-    if (this.props.onTouchTapDay) {
-      this.props.onTouchTapDay(event, date);
-    }
-  };
 
   shouldDisableDate(day) {
     if (day === null) return false;
@@ -60,12 +55,18 @@ class CalendarMonth extends Component {
 
     return weekArray.map((week, i) => {
       return (
-        <div key={i} style={styles.week}>
+        <div role="row" key={i} style={styles.week}>
           {this.getDayElements(week, i)}
         </div>
       );
     }, this);
   }
+
+  handleTouchTapDay = (event, date) => {
+    if (this.props.onTouchTapDay) {
+      this.props.onTouchTapDay(event, date);
+    }
+  };
 
   getDayElements(week, i) {
     const {
@@ -91,6 +92,7 @@ class CalendarMonth extends Component {
           disabled={disabled}
           key={`db${(i + j)}`}
           onTouchTap={this.handleTouchTapDay}
+          onKeyboardFocus={this.props.onKeyboardFocusDay}
           selected={selected}
         />
       );
@@ -99,7 +101,7 @@ class CalendarMonth extends Component {
 
   render() {
     return (
-      <div style={styles.root}>
+      <div role="presentation" style={styles.root}>
         {this.getWeekElements()}
       </div>
     );

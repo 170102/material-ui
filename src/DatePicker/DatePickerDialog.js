@@ -109,6 +109,10 @@ class DatePickerDialog extends Component {
     }
   };
 
+  focus = () => {
+    this.refs.calendar.focus();
+  };
+
   render() {
     const {
       DateTimeFormat,
@@ -133,6 +137,7 @@ class DatePickerDialog extends Component {
       style, // eslint-disable-line no-unused-vars
       animation,
       showTooltip,
+      tabIndex,
       tooltipTitle,
       tooltipShiftLabel,
       tooltipAltShiftLabel,
@@ -156,7 +161,12 @@ class DatePickerDialog extends Component {
     const Container = (container === 'inline' ? Popover : Dialog);
 
     return (
-      <div {...other} ref="root">
+      <div
+        {...other}
+        ref="root"
+        role="widget"
+        aria-hidden={!open}
+      >
         <Container
           anchorEl={anchorEl || this.refs.root} // For Popover
           animation={animation || PopoverAnimationVertical} // For Popover
@@ -192,6 +202,7 @@ class DatePickerDialog extends Component {
             okLabel={okLabel}
             shouldDisableDate={shouldDisableDate}
             showTooltip={showTooltip}
+            tabIndex={tabIndex}
             tooltipTitle={tooltipTitle}
             tooltipShiftLabel={tooltipShiftLabel}
             tooltipAltShiftLabel={tooltipAltShiftLabel}
