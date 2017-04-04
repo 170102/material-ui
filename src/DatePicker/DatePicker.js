@@ -291,11 +291,8 @@ class DatePicker extends Component {
       inputHasFocus = document.activeElement == this.refs.input.input;
 
     switch (key) {
-      // case 'tab':
       case 'esc':
-        // if (!inputHasFocus) {
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-        // }
+        this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
         break;
       case 'up':
       case 'down':

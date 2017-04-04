@@ -147,9 +147,8 @@ class Calendar extends Component {
   };
 
   handleKeyboardFocusDay = (event, keyboardFocused, date) => {
-    this.setSelectedDate(date);
     if (this.props.keybaordFocusDay) this.props.keybaordFocusDay(event, keyboardFocused, date);
-  }
+  };
 
   handleMonthChange = (months) => {
     this.setState({
@@ -188,15 +187,20 @@ class Calendar extends Component {
     if (this.props.open) {
       switch (keycode(event)) {
         case 'tab':
-          // if (calendarMonthNode && calendarMonthNode.contains(document.activeElement)) {
-          //   if (event.shiftKey) {
-          //     ReactDOM.findDOMNode(this.toolbar.nextButton).focus();
-          //   } else {
-          //     this.actions.focus();
-          //   }
-          //   event.preventDefault();
-          //   event.stopPropagation();
-          // }
+          const calendarMonthNode = ReactDOM.findDOMNode(this.calendarMonth);
+          const cancelButtonElement = ReactDOM.findDOMNode(this.actions.cancelButton);
+          const nextButtonElement = ReactDOM.findDOMNode(this.toolbar.nextButton);
+
+          // Tab order skips calendar, focus transfers from "next month" button to "cancel" action
+          if (cancelButtonElement.contains(document.activeElement) && event.shiftKey) {
+              nextButtonElement.focus();
+              event.preventDefault();
+              event.stopPropagation();
+          } else if (nextButtonElement.contains(document.activeElement) && !event.shiftKey) {
+              cancelButtonElement.focus();
+              event.preventDefault();
+              event.stopPropagation();
+          }
           break;
         case 'up':
           if (event.altKey && event.shiftKey) {
@@ -378,37 +382,34 @@ class Calendar extends Component {
                 prevMonth={toolbarInteractions.prevMonth}
                 nextMonth={toolbarInteractions.nextMonth}
               />
-              <div role="grid">
-                <div role="row" style={prepareStyles(styles.weekTitle)}>
-                  {daysArray.map((event, i) => (
-                    <span
-                      role="columnheading"
-                      key={i}
-                      style={weekTitleDayStyle}
-                      title={localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek, 'long')}
-                    >
-                      {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
-                    </span>
-                  ))}
-                </div>
-                <SlideInTransitionGroup role="presentation" direction={this.state.transitionDirection} style={styles.transitionSlide}>
-                  <CalendarMonth
-                    role="presentation"
-                    DateTimeFormat={DateTimeFormat}
-                    locale={locale}
-                    displayDate={this.state.displayDate}
-                    firstDayOfWeek={this.props.firstDayOfWeek}
-                    key={this.state.displayDate.toDateString()}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    onTouchTapDay={this.handleTouchTapDay}
-                    onKeyboardFocusDay={this.handleKeyboardFocusDay}
-                    ref={(el) => this.calendarMonth = el}
-                    selectedDate={this.state.selectedDate}
-                    shouldDisableDate={this.props.shouldDisableDate}
-                  />
-                </SlideInTransitionGroup>
+              <div style={prepareStyles(styles.weekTitle)}>
+                {daysArray.map((event, i) => (
+                  <span
+                    key={i}
+                    style={weekTitleDayStyle}
+                    title={localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek, 'long')}
+                  >
+                    {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
+                  </span>
+                ))}
               </div>
+              <SlideInTransitionGroup role="presentation" direction={this.state.transitionDirection} style={styles.transitionSlide}>
+                <CalendarMonth
+                  role="presentation"
+                  DateTimeFormat={DateTimeFormat}
+                  locale={locale}
+                  displayDate={this.state.displayDate}
+                  firstDayOfWeek={this.props.firstDayOfWeek}
+                  key={this.state.displayDate.toDateString()}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  onTouchTapDay={this.handleTouchTapDay}
+                  onKeyboardFocusDay={this.handleKeyboardFocusDay}
+                  ref={(el) => this.calendarMonth = el}
+                  selectedDate={this.state.selectedDate}
+                  shouldDisableDate={this.props.shouldDisableDate}
+                />
+              </SlideInTransitionGroup>
             </div>
           }
           {!this.state.displayMonthDay &&

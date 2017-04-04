@@ -45,7 +45,7 @@ class DatePickerDialog extends Component {
     okLabel: 'OK',
     tooltipTitle: 'Hold',
     tooltipShiftLabel: '[shift] to skip month',
-    tooltipAltShiftLabel: '[alt+shift] to skip year'
+    tooltipAltShiftLabel: '[alt+shift] to skip year',
   };
 
   static contextTypes = {

@@ -12,7 +12,7 @@ class CalendarActionButton extends Component {
   };
 
   focus = () => {
-    const cancelButton = ReactDOM.findDOMNode(this.refs.cancelButton);
+    const cancelButton = ReactDOM.findDOMNode(this.cancelButton);
     if (cancelButton)
       ReactDOM.findDOMNode(cancelButton).focus();
   };
@@ -39,7 +39,7 @@ class CalendarActionButton extends Component {
     return (
       <div style={styles.root} >
         <FlatButton
-          ref="cancelButton"
+          ref={(el) => this.cancelButton = el}
           label={cancelLabel}
           onTouchTap={this.props.onTouchTapCancel}
           primary={true}

@@ -91,6 +91,7 @@ class CalendarMonth extends Component {
           date={day}
           disabled={disabled}
           key={`db${(i + j)}`}
+          ref={(el) => this.selectedDayButton = selected ? el : this.selectedDayButton}
           onTouchTap={this.handleTouchTapDay}
           onKeyboardFocus={this.props.onKeyboardFocusDay}
           selected={selected}
@@ -101,7 +102,7 @@ class CalendarMonth extends Component {
 
   render() {
     return (
-      <div role="presentation" style={styles.root}>
+      <div role="grid" style={styles.root}>
         {this.getWeekElements()}
       </div>
     );

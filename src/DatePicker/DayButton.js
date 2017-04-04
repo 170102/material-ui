@@ -122,7 +122,7 @@ class DayButton extends Component {
       <EnhancedButton
         {...other}
         role="gridcell"
-        ref="button"
+        ref={(e) => this.button = e}
         aria-selected={selected}
         disabled={disabled}
         disableFocusRipple={true}
