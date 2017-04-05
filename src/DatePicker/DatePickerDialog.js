@@ -46,7 +46,7 @@ class DatePickerDialog extends Component {
     okLabel: 'OK',
     tooltipTitle: 'Hold',
     tooltipShiftLabel: '[shift] to skip month',
-    tooltipAltShiftLabel: '[alt+shift] to skip year'
+    tooltipAltShiftLabel: '[alt+shift] to skip year',
   };
 
   static contextTypes = {
@@ -164,7 +164,6 @@ class DatePickerDialog extends Component {
       <div
         {...other}
         ref="root"
-        role="widget"
         aria-hidden={!open}
       >
         <Container

@@ -77,13 +77,26 @@ class Calendar extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillUpdate(nextProps) {
     if (nextProps.initialDate !== this.props.initialDate) {
       const date = nextProps.initialDate || new Date();
       this.setState({
         displayDate: getFirstDayOfMonth(date),
         selectedDate: date,
       });
+    }
+
+    const calendarMonthNode = ReactDOM.findDOMNode(this.refs.calendarMonth);
+    // Maintain keyboard focus on CalendarMonth when month changes
+    if (calendarMonthNode.contains(document.activeElement)) {
+      this.focusGrid = true;
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.focusGrid) {
+      this.focusGrid = false;
+      this.refs.calendarMonth.focus();
     }
   }
 
@@ -96,7 +109,7 @@ class Calendar extends Component {
       return false;
     }
 
-    return this.calendarMonth.isSelectedDateDisabled();
+    return this.refs.calendarMonth.isSelectedDateDisabled();
   }
 
   addSelectedDays(days) {
@@ -148,9 +161,8 @@ class Calendar extends Component {
   };
 
   handleKeyboardFocusDay = (event, keyboardFocused, date) => {
-    this.setSelectedDate(date);
     if (this.props.keybaordFocusDay) this.props.keybaordFocusDay(event, keyboardFocused, date);
-  }
+  };
 
   handleMonthChange = (months) => {
     this.setState({
@@ -188,17 +200,6 @@ class Calendar extends Component {
   handleWindowKeyDown = (event) => {
     if (this.props.open) {
       switch (keycode(event)) {
-        case 'tab':
-          // if (calendarMonthNode && calendarMonthNode.contains(document.activeElement)) {
-          //   if (event.shiftKey) {
-          //     ReactDOM.findDOMNode(this.toolbar.nextButton).focus();
-          //   } else {
-          //     this.actions.focus();
-          //   }
-          //   event.preventDefault();
-          //   event.stopPropagation();
-          // }
-          break;
         case 'up':
           if (event.altKey && event.shiftKey) {
             this.addSelectedYears(-1);
@@ -382,37 +383,34 @@ class Calendar extends Component {
                 prevMonth={toolbarInteractions.prevMonth}
                 nextMonth={toolbarInteractions.nextMonth}
               />
-              <div role="grid">
-                <div role="row" style={prepareStyles(styles.weekTitle)}>
-                  {daysArray.map((event, i) => (
-                    <span
-                      role="columnheading"
-                      key={i}
-                      style={weekTitleDayStyle}
-                      title={localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek, 'long')}
-                    >
-                      {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
-                    </span>
-                  ))}
-                </div>
-                <SlideInTransitionGroup role="presentation" direction={this.state.transitionDirection} style={styles.transitionSlide}>
-                  <CalendarMonth
-                    role="presentation"
-                    DateTimeFormat={DateTimeFormat}
-                    locale={locale}
-                    displayDate={this.state.displayDate}
-                    firstDayOfWeek={this.props.firstDayOfWeek}
-                    key={this.state.displayDate.toDateString()}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    onTouchTapDay={this.handleTouchTapDay}
-                    onKeyboardFocusDay={this.handleKeyboardFocusDay}
-                    ref={(el) => this.calendarMonth = el}
-                    selectedDate={this.state.selectedDate}
-                    shouldDisableDate={this.props.shouldDisableDate}
-                  />
-                </SlideInTransitionGroup>
+              <div style={prepareStyles(styles.weekTitle)}>
+                {daysArray.map((event, i) => (
+                  <span
+                    key={i}
+                    style={weekTitleDayStyle}
+                    title={localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek, 'long')}
+                  >
+                    {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
+                  </span>
+                ))}
               </div>
+              <SlideInTransitionGroup role="presentation" direction={this.state.transitionDirection} style={styles.transitionSlide}>
+                <CalendarMonth
+                  role="presentation"
+                  DateTimeFormat={DateTimeFormat}
+                  locale={locale}
+                  displayDate={this.state.displayDate}
+                  firstDayOfWeek={this.props.firstDayOfWeek}
+                  key={this.state.displayDate.toDateString()}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  onTouchTapDay={this.handleTouchTapDay}
+                  onKeyboardFocusDay={this.handleKeyboardFocusDay}
+                  ref="calendarMonth"
+                  selectedDate={this.state.selectedDate}
+                  shouldDisableDate={this.props.shouldDisableDate}
+                />
+              </SlideInTransitionGroup>
             </div>
           }
           {!this.state.displayMonthDay &&
@@ -431,7 +429,7 @@ class Calendar extends Component {
           }
           {okLabel &&
             <CalendarActionButtons
-              ref={(el) => this.actions = el}
+              ref="actions"
               autoOk={this.props.autoOk}
               cancelLabel={cancelLabel}
               okLabel={okLabel}
