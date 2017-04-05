@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import {isBetweenDates, isEqualDate, getWeekArray} from './dateUtils';
 import DayButton from './DayButton';
 
@@ -55,7 +56,7 @@ class CalendarMonth extends Component {
 
     return weekArray.map((week, i) => {
       return (
-        <div role="row" key={i} style={styles.week}>
+        <div role="row" tabIndex="-1" key={i} style={styles.week}>
           {this.getDayElements(week, i)}
         </div>
       );
@@ -91,7 +92,6 @@ class CalendarMonth extends Component {
           date={day}
           disabled={disabled}
           key={`db${(i + j)}`}
-          ref={(el) => this.selectedDayButton = selected ? el : this.selectedDayButton}
           onTouchTap={this.handleTouchTapDay}
           onKeyboardFocus={this.props.onKeyboardFocusDay}
           selected={selected}
@@ -100,9 +100,20 @@ class CalendarMonth extends Component {
     }, this);
   }
 
+  focus = () => {
+    const gridNode = ReactDOM.findDOMNode(this.refs.grid);
+    gridNode.focus();
+  };
+
   render() {
     return (
-      <div role="grid" style={styles.root}>
+      <div
+        role="grid"
+        tabIndex="0"
+        style={styles.root}
+        ref="grid"
+        aria-label="Calendar"
+      >
         {this.getWeekElements()}
       </div>
     );

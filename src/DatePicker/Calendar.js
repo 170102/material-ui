@@ -76,13 +76,26 @@ class Calendar extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillUpdate(nextProps) {
     if (nextProps.initialDate !== this.props.initialDate) {
       const date = nextProps.initialDate || new Date();
       this.setState({
         displayDate: getFirstDayOfMonth(date),
         selectedDate: date,
       });
+    }
+
+    const calendarMonthNode = ReactDOM.findDOMNode(this.refs.calendarMonth);
+    // Maintain keyboard focus on CalendarMonth when month changes
+    if (calendarMonthNode.contains(document.activeElement)) {
+      this.focusGrid = true;
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.focusGrid) {
+      this.focusGrid = false;
+      this.refs.calendarMonth.focus();
     }
   }
 
@@ -95,7 +108,7 @@ class Calendar extends Component {
       return false;
     }
 
-    return this.calendarMonth.isSelectedDateDisabled();
+    return this.refs.calendarMonth.isSelectedDateDisabled();
   }
 
   addSelectedDays(days) {
@@ -186,22 +199,6 @@ class Calendar extends Component {
   handleWindowKeyDown = (event) => {
     if (this.props.open) {
       switch (keycode(event)) {
-        case 'tab':
-          const calendarMonthNode = ReactDOM.findDOMNode(this.calendarMonth);
-          const cancelButtonElement = ReactDOM.findDOMNode(this.actions.cancelButton);
-          const nextButtonElement = ReactDOM.findDOMNode(this.toolbar.nextButton);
-
-          // Tab order skips calendar, focus transfers from "next month" button to "cancel" action
-          if (cancelButtonElement.contains(document.activeElement) && event.shiftKey) {
-              nextButtonElement.focus();
-              event.preventDefault();
-              event.stopPropagation();
-          } else if (nextButtonElement.contains(document.activeElement) && !event.shiftKey) {
-              cancelButtonElement.focus();
-              event.preventDefault();
-              event.stopPropagation();
-          }
-          break;
         case 'up':
           if (event.altKey && event.shiftKey) {
             this.addSelectedYears(-1);
@@ -405,7 +402,7 @@ class Calendar extends Component {
                   maxDate={maxDate}
                   onTouchTapDay={this.handleTouchTapDay}
                   onKeyboardFocusDay={this.handleKeyboardFocusDay}
-                  ref={(el) => this.calendarMonth = el}
+                  ref="calendarMonth"
                   selectedDate={this.state.selectedDate}
                   shouldDisableDate={this.props.shouldDisableDate}
                 />
@@ -428,7 +425,7 @@ class Calendar extends Component {
           }
           {okLabel &&
             <CalendarActionButtons
-              ref={(el) => this.actions = el}
+              ref="actions"
               autoOk={this.props.autoOk}
               cancelLabel={cancelLabel}
               okLabel={okLabel}

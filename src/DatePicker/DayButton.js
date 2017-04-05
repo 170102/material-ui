@@ -133,6 +133,7 @@ class DayButton extends Component {
         onMouseLeave={this.handleMouseLeave}
         onTouchTap={this.handleTouchTap}
         style={styles.root}
+        tabIndex={-1}
       >
         <div style={prepareStyles(styles.buttonState)} />
         <span style={prepareStyles(styles.label)}>

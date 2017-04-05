@@ -162,7 +162,6 @@ class DatePickerDialog extends Component {
       <div
         {...other}
         ref="root"
-        role="widget"
         aria-hidden={!open}
       >
         <Container
