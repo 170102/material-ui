@@ -164,7 +164,6 @@ class DatePickerDialog extends Component {
       <div
         {...other}
         ref="root"
-        aria-hidden={!open}
       >
         <Container
           anchorEl={anchorEl || this.refs.root} // For Popover
@@ -177,6 +176,8 @@ class DatePickerDialog extends Component {
           useLayerForClickAway={useLayerForClickAway}
           onRequestClose={this.handleRequestClose}
           style={Object.assign(styles.dialogBodyContent, containerStyle)}
+          role="dialog"
+          aria-label="date picker"
         >
           <EventListener
             target="window"
