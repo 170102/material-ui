@@ -487,7 +487,6 @@ class DatePicker extends Component {
           value={rawDate ? rawDate : ''}
           errorText={inputError}
           hintText={hintText}
-          aria-label={other.floatingLabelText || hintText}
         />
         <EventListener
           target="window"
