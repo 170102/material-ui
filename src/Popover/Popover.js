@@ -69,6 +69,11 @@ class Popover extends Component {
      */
     open: PropTypes.bool,
     /**
+     * If true, the popover will keep a reference to the component from which it
+     * received focus and return focus to that element when the popover closes
+     */
+    returnFocusOnBlur: PropTypes.bool,
+    /**
      * Override the inline-styles of the root element.
      */
     style: PropTypes.object,
@@ -102,6 +107,7 @@ class Popover extends Component {
     canAutoPosition: true,
     onRequestClose: () => {},
     open: false,
+    returnFocusOnBlur: true,
     style: {
       overflowY: 'auto',
     },
@@ -161,6 +167,22 @@ class Popover extends Component {
           open: false,
         });
       }
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    if (!nextProps.returnFocusOnBlur)
+      return;
+
+    if (nextProps.open) {
+      this.originalFocus = this.originalFocus || document.activeElement;
+    } else {
+      setTimeout(() => {
+        if (this.originalFocus) {
+          this.originalFocus.focus();
+          this.originalFocus = null;
+        }
+      }, 1);
     }
   }
 
