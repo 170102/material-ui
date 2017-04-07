@@ -174,8 +174,6 @@ class DatePickerDialog extends Component {
           useLayerForClickAway={useLayerForClickAway}
           onRequestClose={this.handleRequestClose}
           style={Object.assign(styles.dialogBodyContent, containerStyle)}
-          role="dialog"
-          aria-label="date picker"
         >
           <EventListener
             target="window"
@@ -195,6 +193,8 @@ class DatePickerDialog extends Component {
             mode={mode}
             open={open}
             ref="calendar"
+            role="dialog"
+            aria-label="date picker"
             onTouchTapCancel={this.handleTouchTapCancel}
             onTouchTapOk={this.handleTouchTapOk}
             okLabel={okLabel}

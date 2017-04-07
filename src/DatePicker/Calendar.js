@@ -348,10 +348,11 @@ class Calendar extends Component {
       tooltipTitle,
       tooltipShiftLabel,
       tooltipAltShiftLabel,
+      ...other
     } = this.props;
 
     return (
-      <div style={prepareStyles(styles.root)}>
+      <div style={prepareStyles(styles.root)} {...other}>
         <EventListener
           target="window"
           onKeyDown={this.handleWindowKeyDown}

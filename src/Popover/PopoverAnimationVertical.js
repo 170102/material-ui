@@ -63,14 +63,12 @@ class PopoverAnimationVertical extends Component {
       className,
       style,
       zDepth,
-      ...other,
     } = this.props;
 
     const styles = getStyles(this.props, this.context, this.state);
 
     return (
       <Paper
-        {...other}
         style={Object.assign(styles.root, style)}
         zDepth={zDepth}
         className={className}

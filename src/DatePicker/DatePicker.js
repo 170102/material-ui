@@ -323,6 +323,13 @@ class DatePicker extends Component {
           this.focusInputAfterDismiss();
         });
         break;
+      case 'tab':
+        const previousButton = ReactDOM.findDOMNode(this.refs.dialogWindow.refs.calendar.toolbar.prevButton);
+        if (event.shiftKey && previousButton && previousButton.contains(document.activeElement)) {
+          this.refs.input.focus();
+          event.preventDefault();
+        }
+        break;
       case 'up':
       case 'down':
       case 'left':
@@ -536,7 +543,7 @@ class DatePicker extends Component {
           okLabel={okLabel}
           onAccept={this.handleAccept}
           onShow={onShow}
-          onDismiss={onDismiss}
+          onDismiss={this.handleDismiss}
           ref="dialogWindow"
           shouldDisableDate={shouldDisableDate}
           showTooltip={showTooltip}
