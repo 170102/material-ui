@@ -265,7 +265,6 @@ class Calendar extends Component {
 
   render() {
     const {prepareStyles} = this.context.muiTheme;
-    const {hideCalendarDate} = this.props;
     const toolbarInteractions = this.getToolbarInteractions();
     const isLandscape = this.props.mode === 'landscape';
     const {calendarTextColor} = this.context.muiTheme.datePicker;
