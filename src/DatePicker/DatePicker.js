@@ -346,20 +346,15 @@ class DatePicker extends Component {
     switch (key) {
       case 'tab':
         if (this.refs.dialogWindow.state.open) {
-          // if (event.shiftKey) {
-          //   this.setState({keyboardActivated: false});
-          //   this.refs.dialogWindow.dismiss();
-          // } else {
+          if (event.shiftKey) {
+            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+          } else {
             if (!ReactDOM.findDOMNode(this.refs.dialogWindow).contains(document.activeElement)) {
               this.refs.dialogWindow.focus();
               event.preventDefault();
               event.stopPropagation();
             }
-            // this.refs.input.blur();
-
-            // event.preventDefault();
-            // event.stopPropagation();
-          // }
+          }
         }
         break;
       case 'esc':
