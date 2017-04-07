@@ -270,6 +270,30 @@ class Calendar extends Component {
     const isLandscape = this.props.mode === 'landscape';
     const {calendarTextColor} = this.context.muiTheme.datePicker;
 
+    const {
+      minDate,
+      maxDate,
+      cancelLabel,
+      DateTimeFormat,
+      firstDayOfWeek,
+      locale,
+      okLabel,
+      onTouchTapCancel, // eslint-disable-line no-unused-vars
+      onTouchTapOk, // eslint-disable-line no-unused-vars
+      showTooltip,
+      tabIndex,
+      tooltipTitle,
+      tooltipShiftLabel,
+      tooltipAltShiftLabel,
+      autoOk,
+      disableYearSelection,
+      initialDate,
+      onTouchTapDay,
+      shouldDisableDate,
+      hideCalendarDate,
+      ...other
+    } = this.props;
+
     const styles = {
       root: {
         color: calendarTextColor,
@@ -334,24 +358,6 @@ class Calendar extends Component {
     };
 
     const weekTitleDayStyle = prepareStyles(styles.weekTitleDay);
-
-    const {
-      minDate,
-      maxDate,
-      cancelLabel,
-      DateTimeFormat,
-      firstDayOfWeek,
-      locale,
-      okLabel,
-      onTouchTapCancel, // eslint-disable-line no-unused-vars
-      onTouchTapOk, // eslint-disable-line no-unused-vars
-      showTooltip,
-      tabIndex,
-      tooltipTitle,
-      tooltipShiftLabel,
-      tooltipAltShiftLabel,
-      ...other
-    } = this.props;
 
     return (
       <div style={prepareStyles(styles.root)} {...other}>

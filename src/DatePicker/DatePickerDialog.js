@@ -172,6 +172,7 @@ class DatePickerDialog extends Component {
           contentStyle={styles.dialogContent}
           ref="dialog"
           repositionOnUpdate={true}
+          returnFocusOnBlur={false}
           open={open}
           useLayerForClickAway={useLayerForClickAway}
           onRequestClose={this.handleRequestClose}
