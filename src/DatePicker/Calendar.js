@@ -87,7 +87,7 @@ class Calendar extends Component {
 
     const calendarMonthNode = ReactDOM.findDOMNode(this.refs.calendarMonth);
     // Maintain keyboard focus on CalendarMonth when month changes
-    if (calendarMonthNode.contains(document.activeElement)) {
+    if (calendarMonthNode && calendarMonthNode.contains(document.activeElement)) {
       this.focusGrid = true;
     }
   }

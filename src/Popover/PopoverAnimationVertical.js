@@ -63,7 +63,7 @@ class PopoverAnimationVertical extends Component {
       className,
       style,
       zDepth,
-      ... other,
+      ...other,
     } = this.props;
 
     const styles = getStyles(this.props, this.context, this.state);
