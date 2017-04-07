@@ -23,8 +23,8 @@ describe('<DateDisplay />', () => {
         />
       );
 
-      assert.strictEqual(wrapper.find('div').at(1).text(), '2015');
-      assert.strictEqual(wrapper.find('div').at(2).text(), 'Tue, Dec 1');
+      assert.strictEqual(wrapper.find('div').at(2).text(), '2015');
+      assert.strictEqual(wrapper.find('div').at(3).text(), 'Tue, Dec 1');
     });
   });
 });

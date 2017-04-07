@@ -71,6 +71,7 @@ export const SnackbarBody = (props, context) => {
     open, // eslint-disable-line no-unused-vars
     onActionTouchTap,
     style,
+    contentId,
     ...other
   } = props;
 
@@ -88,7 +89,7 @@ export const SnackbarBody = (props, context) => {
   return (
     <div {...other} style={prepareStyles(Object.assign(styles.root, style))}>
       <div style={prepareStyles(Object.assign(styles.content, contentStyle))}>
-        <span>{message}</span>
+        <span id={contentId}>{message}</span>
         {actionButton}
       </div>
     </div>

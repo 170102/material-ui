@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import IconButton from '../IconButton';
 import NavigationChevronLeft from '../svg-icons/navigation/chevron-left';
 import NavigationChevronRight from '../svg-icons/navigation/chevron-right';
@@ -63,8 +64,19 @@ class CalendarToolbar extends Component {
     }
   };
 
+  focus = () => {
+    const prevMonth = ReactDOM.findDOMNode(this.prevButton);
+    this.prevButton.setKeyboardFocus();
+    prevMonth.focus();
+  }
+
   render() {
-    const {DateTimeFormat, locale, displayDate} = this.props;
+    const {
+      DateTimeFormat,
+      locale,
+      displayDate,
+      tabIndex,
+    } = this.props;
 
     const dateTimeFormatted = new DateTimeFormat(locale, {
       month: 'long',
@@ -74,6 +86,9 @@ class CalendarToolbar extends Component {
     return (
       <div style={styles.root}>
         <IconButton
+          ref={(el) => this.prevButton = el}
+          tabIndex={tabIndex}
+          aria-label="Go to previous month"
           disabled={!this.props.prevMonth}
           onTouchTap={this.handleTouchTapPrevMonth}
         >
@@ -83,11 +98,18 @@ class CalendarToolbar extends Component {
           direction={this.state.transitionDirection}
           style={styles.titleDiv}
         >
-          <div key={dateTimeFormatted} style={styles.titleText}>
+          <div
+            role="status"
+            key={dateTimeFormatted}
+            style={styles.titleText}
+          >
             {dateTimeFormatted}
           </div>
         </SlideInTransitionGroup>
         <IconButton
+          tabIndex={tabIndex}
+          ref={(el) => this.nextButton = el}
+          aria-label="Go to next month"
           disabled={!this.props.nextMonth}
           onTouchTap={this.handleTouchTapNextMonth}
         >
