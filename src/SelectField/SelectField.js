@@ -170,7 +170,6 @@ class SelectField extends Component {
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
   };
-
   render() {
     const {
       autoWidth,
@@ -224,6 +223,8 @@ class SelectField extends Component {
         onFocus={onFocus}
         onBlur={onBlur}
         id={id}
+        role="menu"
+        aria-label={floatingLabelText || hintText}
         underlineDisabledStyle={underlineDisabledStyle}
         underlineFocusStyle={underlineFocusStyle}
       >

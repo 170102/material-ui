@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import EventListener from 'react-event-listener';
 import keycode from 'keycode';
 import transitions from '../styles/transitions';
@@ -43,6 +44,9 @@ class Calendar extends Component {
     onTouchTapOk: PropTypes.func,
     open: PropTypes.bool,
     shouldDisableDate: PropTypes.func,
+    tooltipTitle: PropTypes.string,
+    tooltipShiftLabel: PropTypes.string,
+    tooltipAltShiftLabel: PropTypes.string,
   };
 
   static defaultProps = {
@@ -73,13 +77,26 @@ class Calendar extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillUpdate(nextProps) {
     if (nextProps.initialDate !== this.props.initialDate) {
       const date = nextProps.initialDate || new Date();
       this.setState({
         displayDate: getFirstDayOfMonth(date),
         selectedDate: date,
       });
+    }
+
+    const calendarMonthNode = ReactDOM.findDOMNode(this.refs.calendarMonth);
+    // Maintain keyboard focus on CalendarMonth when month changes
+    if (calendarMonthNode && calendarMonthNode.contains(document.activeElement)) {
+      this.focusGrid = true;
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.focusGrid) {
+      this.focusGrid = false;
+      this.refs.calendarMonth.focus();
     }
   }
 
@@ -92,7 +109,7 @@ class Calendar extends Component {
       return false;
     }
 
-    return this.refs.calendar.isSelectedDateDisabled();
+    return this.refs.calendarMonth.isSelectedDateDisabled();
   }
 
   addSelectedDays(days) {
@@ -141,6 +158,10 @@ class Calendar extends Component {
   handleTouchTapDay = (event, date) => {
     this.setSelectedDate(date);
     if (this.props.onTouchTapDay) this.props.onTouchTapDay(event, date);
+  };
+
+  handleKeyboardFocusDay = (event, keyboardFocused, date) => {
+    if (this.props.keybaordFocusDay) this.props.keybaordFocusDay(event, keyboardFocused, date);
   };
 
   handleMonthChange = (months) => {
@@ -238,6 +259,10 @@ class Calendar extends Component {
     }
   }
 
+  focus = () => {
+    this.toolbar.focus();
+  };
+
   render() {
     const {prepareStyles} = this.context.muiTheme;
     const {hideCalendarDate} = this.props;
@@ -249,11 +274,10 @@ class Calendar extends Component {
       root: {
         color: calendarTextColor,
         userSelect: 'none',
-        width: (!hideCalendarDate && isLandscape) ? 479 : 310,
+        width: isLandscape ? 479 : 310,
+        overflow: 'hidden',
       },
       calendar: {
-        display: 'flex',
-        flexDirection: 'column',
       },
       calendarContainer: {
         display: 'flex',
@@ -273,6 +297,23 @@ class Calendar extends Component {
         marginTop: 10,
         overflow: 'hidden',
         width: 310,
+      },
+      tooltip: {
+        display: 'block',
+        float: 'left',
+        fontSize: 12,
+        fontWeight: 400,
+        height: this.props.mode === 'landscape' ? '20%' : 43,
+        lineHeight: '12px',
+        margin: '2px 8px 6px',
+      },
+      tooltipList: {
+        margin: 0,
+        padding: 0,
+        listStyle: 'none'
+      },
+      tooltipListItem: {
+        margin: '3px 0',
       },
       weekTitle: {
         display: 'flex',
@@ -304,10 +345,16 @@ class Calendar extends Component {
       okLabel,
       onTouchTapCancel, // eslint-disable-line no-unused-vars
       onTouchTapOk, // eslint-disable-line no-unused-vars
+      showTooltip,
+      tabIndex,
+      tooltipTitle,
+      tooltipShiftLabel,
+      tooltipAltShiftLabel,
+      ...other
     } = this.props;
 
     return (
-      <div style={prepareStyles(styles.root)}>
+      <div style={prepareStyles(styles.root)} {...other}>
         <EventListener
           target="window"
           onKeyDown={this.handleWindowKeyDown}
@@ -328,6 +375,8 @@ class Calendar extends Component {
           {this.state.displayMonthDay &&
             <div style={prepareStyles(styles.calendarContainer)}>
               <CalendarToolbar
+                ref={(el) => this.toolbar = el}
+                tabIndex={tabIndex}
                 DateTimeFormat={DateTimeFormat}
                 locale={locale}
                 displayDate={this.state.displayDate}
@@ -337,13 +386,18 @@ class Calendar extends Component {
               />
               <div style={prepareStyles(styles.weekTitle)}>
                 {daysArray.map((event, i) => (
-                  <span key={i} style={weekTitleDayStyle}>
+                  <span
+                    key={i}
+                    style={weekTitleDayStyle}
+                    title={localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek, 'long')}
+                  >
                     {localizedWeekday(DateTimeFormat, locale, i, firstDayOfWeek)}
                   </span>
                 ))}
               </div>
-              <SlideInTransitionGroup direction={this.state.transitionDirection} style={styles.transitionSlide}>
+              <SlideInTransitionGroup role="presentation" direction={this.state.transitionDirection} style={styles.transitionSlide}>
                 <CalendarMonth
+                  role="presentation"
                   DateTimeFormat={DateTimeFormat}
                   locale={locale}
                   displayDate={this.state.displayDate}
@@ -352,7 +406,8 @@ class Calendar extends Component {
                   minDate={minDate}
                   maxDate={maxDate}
                   onTouchTapDay={this.handleTouchTapDay}
-                  ref="calendar"
+                  onKeyboardFocusDay={this.handleKeyboardFocusDay}
+                  ref="calendarMonth"
                   selectedDate={this.state.selectedDate}
                   shouldDisableDate={this.props.shouldDisableDate}
                 />
@@ -364,8 +419,18 @@ class Calendar extends Component {
               {this.yearSelector()}
             </div>
           }
+          { showTooltip &&
+            <div style={styles.tooltip}>
+              <div>{tooltipTitle}</div>
+              <ul style={styles.tooltipList}>
+                <li style={styles.tooltipListItem}>{tooltipShiftLabel}</li>
+                <li style={styles.tooltipListItem}>{tooltipAltShiftLabel}</li>
+              </ul>
+            </div>
+          }
           {okLabel &&
             <CalendarActionButtons
+              ref="actions"
               autoOk={this.props.autoOk}
               cancelLabel={cancelLabel}
               okLabel={okLabel}

@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import EventListener from 'react-event-listener';
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
@@ -144,6 +145,10 @@ class DatePicker extends Component {
      * Sets the date for the Date Picker programmatically.
      */
     value: PropTypes.object,
+    /**
+     * Tells the DatePicker whether the keyboard shortcut tooltip should display
+     */
+    showTooltip: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -152,6 +157,7 @@ class DatePicker extends Component {
     disabled: false,
     disableYearSelection: false,
     firstDayOfWeek: 1,
+    showTooltip: false,
     hideCalendarDate: false,
     style: {},
   };
@@ -207,8 +213,10 @@ class DatePicker extends Component {
      * (get the current system date while doing so)
      * else set it to the currently selected date
      */
-    if (this.shouldHandleKeyboard())
+    if (this.shouldHandleKeyboard() && !this.preventExpand)
       this.refs.input.focus();
+
+    this.preventExpand = false;
 
     if (this.state.date !== undefined) {
       this.setState({
@@ -225,14 +233,34 @@ class DatePicker extends Component {
    * Alias for `openDialog()` for an api consistent with TextField.
    */
   focus() {
-    this.openDialog();
+    if (!this.preventExpand)
+      this.openDialog();
+
+    if (this.shouldHandleKeyboard())
+      this.refs.input.focus();
+
+    this.preventExpand = false;
   }
+
+  handleDismiss = () => {
+    if (this.props.onDismiss) {
+      this.props.onDismiss();
+    }
+  };
 
   shouldHandleKeyboard = () => {
     return this.props.keyboardEnabled &&
       !this.props.disabled &&
       this.props.container === 'inline';
-  }
+  };
+
+  focusInputAfterDismiss = () => {
+    this.preventExpand = true;
+    const input = this.refs.input;
+    setTimeout(() => {
+      input.focus();
+    }, 10);
+  };
 
   handleAccept = (date) => {
     if (!this.isControlled()) {
@@ -244,6 +272,8 @@ class DatePicker extends Component {
     if (this.props.onChange) {
       this.props.onChange(null, date);
     }
+
+    this.focusInputAfterDismiss();
   };
 
   handleInputFocus = (event) => {
@@ -258,9 +288,37 @@ class DatePicker extends Component {
     }
   };
 
-  handleInputBlur = () => {
-    const tmpDate = this.state.date instanceof Date ? this.state.date : undefined;
-    this.handleAccept(tmpDate);
+  handleInputBlur = (event) => {
+    if(this.state.keyboardActivated)
+      this.setState({
+        keyboardActivated: false,
+        date: this.state.date instanceof Date ? this.state.date : undefined,
+      });
+  }
+
+  handleWindowKeyDown = (event) => {
+    const key = keycode(event),
+      inputHasFocus = document.activeElement == this.refs.input.input;
+
+    switch (key) {
+      case 'tab':
+      case 'esc':
+        if (!inputHasFocus) {
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+        }
+        break;
+      case 'up':
+      case 'down':
+      case 'left':
+      case 'right':
+        if (this.refs.dialogWindow.state.open) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   handleKeyDown = (event) => {
@@ -270,15 +328,27 @@ class DatePicker extends Component {
     const key = keycode(event);
     switch (key) {
       case 'tab':
-        if (this.state.keyboardActivated)
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+        if (this.state.keyboardActivated && this.refs.dialogWindow.state.open) {
+          if (event.shiftKey) {
+            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+          } else {
+            this.refs.input.blur();
+
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }
+        break;
+      case 'esc':
+        if(this.state.keyboardActivated)
+          this.setState({ keyboardActivated: false }, this.refs.dialogWindow.dismiss);
         break;
       case 'right':
       case 'left':
       case 'up':
       case 'down':
         event.stopPropagation();
-        break;
+        event.preventDefault();
     }
   }
 
@@ -323,6 +393,135 @@ class DatePicker extends Component {
       event.stopPropagation();
       return;
     }
+  }
+
+  handleInputBlur = (event) => {
+    if(this.state.keyboardActivated) {
+      this.setState({
+        keyboardActivated: false,
+        date: this.state.date instanceof Date ? this.state.date : undefined,
+      });
+    }
+  }
+
+  handleClick = (event) => {
+    if (this.shouldHandleKeyboard() && this.refs.dialogWindow.state.open) {
+      event.stopPropagation();
+      return;
+    }
+  }
+
+  handleWindowKeyDown = (event) => {
+    const calendarNode = ReactDOM.findDOMNode(this.refs.dialogWindow.refs.calendar);
+    if (!calendarNode || !calendarNode.contains(event.target)) {
+      return true;
+    }
+
+    const key = keycode(event),
+      inputHasFocus = document.activeElement == this.refs.input.input;
+
+    switch (key) {
+      case 'esc':
+        this.setState({keyboardActivated: false}, () => {
+          this.refs.dialogWindow.dismiss();
+          this.focusInputAfterDismiss();
+        });
+        break;
+      case 'tab':
+        const previousButton = ReactDOM.findDOMNode(this.refs.dialogWindow.refs.calendar.toolbar.prevButton);
+        if (event.shiftKey && previousButton && previousButton.contains(document.activeElement)) {
+          this.refs.input.focus();
+          event.preventDefault();
+        }
+        break;
+      case 'up':
+      case 'down':
+      case 'left':
+      case 'right':
+        if (this.refs.dialogWindow.state.open
+          && !inputHasFocus) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  handleKeyDown = (event) => {
+    if (!this.shouldHandleKeyboard())
+      return;
+
+    const key = keycode(event);
+    switch (key) {
+      case 'tab':
+        if (this.refs.dialogWindow.state.open) {
+          if (event.shiftKey) {
+            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+          } else {
+            if (!ReactDOM.findDOMNode(this.refs.dialogWindow).contains(document.activeElement)) {
+              this.refs.dialogWindow.focus();
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }
+        }
+        break;
+      case 'esc':
+        this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+        event.stopPropagation();
+        break;
+      case 'right':
+      case 'left':
+        event.stopPropagation();
+        break;
+      case 'up':
+        if (this.refs.dialogWindow.state.open) {
+          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
+          event.preventDefault();
+        }
+        break;
+      case 'down':
+        if (!this.refs.dialogWindow.state.open) {
+          this.setState({keyboardActivated: true}, this.refs.dialogWindow.show);
+          event.preventDefault();
+        }
+        event.stopPropagation();
+        break;
+    }
+  }
+
+  handleKeyUp = (event) => {
+    if (!this.shouldHandleKeyboard())
+      return;
+
+    const key = keycode(event);
+    switch (key) {
+      case 'enter':
+        if (this.refs.dialogWindow.state.open) {
+          event.stopPropagation();
+          event.preventDefault();
+          this.refs.dialogWindow.dismiss();
+        }
+        break;
+    }
+  }
+
+  handleInputChange = (event) => {
+    const filtered = event.target.value.replace(/[^0-9\-\/]/gi, '').replace('/', '-');
+    let dt = undefined;
+    if (filtered.length === 10) {
+      // we split this manually as Date.parse is implementation specific
+      // and also because it doesn't use the browser's timezone.
+      const parts = filtered.split('-');
+      if (parts.length === 3)
+        dt = new Date(parts[0], parts[1] - 1, parts[2]); // Note: months are 0 based
+    }
+
+    this.setState({
+      date: !dt || isNaN(dt.getTime()) ? filtered : dt,
+    });
   }
 
   handleTouchTap = (event) => {
@@ -392,6 +591,10 @@ class DatePicker extends Component {
       hideCalendarDate,
       style,
       textFieldStyle,
+      showTooltip,
+      tooltipTitle,
+      tooltipShiftLabel,
+      tooltipAltShiftLabel,
       ...other
     } = this.props;
 
@@ -422,7 +625,12 @@ class DatePicker extends Component {
           errorText={inputError}
           hintText={hintText}
         />
+        <EventListener
+          target="window"
+          onKeyDown={this.handleWindowKeyDown}
+        />
         <DatePickerDialog
+          tabIndex={this.shouldHandleKeyboard() ? 0 : 1}
           DateTimeFormat={DateTimeFormat}
           autoOk={autoOk}
           useLayerForClickAway={!this.shouldHandleKeyboard()}
@@ -440,9 +648,10 @@ class DatePicker extends Component {
           okLabel={okLabel}
           onAccept={this.handleAccept}
           onShow={onShow}
-          onDismiss={onDismiss}
+          onDismiss={this.handleDismiss}
           ref="dialogWindow"
           shouldDisableDate={shouldDisableDate}
+          showTooltip={showTooltip}
           hideCalendarDate={hideCalendarDate}
         />
       </div>

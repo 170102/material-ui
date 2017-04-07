@@ -32,6 +32,10 @@ class DatePickerDialog extends Component {
     shouldDisableDate: PropTypes.func,
     style: PropTypes.object,
     useLayerForClickAway: PropTypes.bool,
+    showTooltip: PropTypes.bool,
+    tooltipTitle: PropTypes.string,
+    tooltipShiftLabel: PropTypes.string,
+    tooltipAltShiftLabel: PropTypes.string,
   };
 
   static defaultProps = {
@@ -40,6 +44,9 @@ class DatePickerDialog extends Component {
     container: 'dialog',
     locale: 'en-US',
     okLabel: 'OK',
+    tooltipTitle: 'Hold',
+    tooltipShiftLabel: '[shift] to skip month',
+    tooltipAltShiftLabel: '[alt+shift] to skip year',
   };
 
   static contextTypes = {
@@ -102,6 +109,10 @@ class DatePickerDialog extends Component {
     }
   };
 
+  focus = () => {
+    this.refs.calendar.focus();
+  };
+
   render() {
     const {
       DateTimeFormat,
@@ -125,6 +136,11 @@ class DatePickerDialog extends Component {
       hideCalendarDate,
       style, // eslint-disable-line no-unused-vars
       animation,
+      showTooltip,
+      tabIndex,
+      tooltipTitle,
+      tooltipShiftLabel,
+      tooltipAltShiftLabel,
       useLayerForClickAway,
       ...other
     } = this.props;
@@ -145,7 +161,10 @@ class DatePickerDialog extends Component {
     const Container = (container === 'inline' ? Popover : Dialog);
 
     return (
-      <div {...other} ref="root">
+      <div
+        {...other}
+        ref="root"
+      >
         <Container
           anchorEl={anchorEl || this.refs.root} // For Popover
           animation={animation || PopoverAnimationVertical} // For Popover
@@ -176,10 +195,17 @@ class DatePickerDialog extends Component {
             mode={mode}
             open={open}
             ref="calendar"
+            role="dialog"
+            aria-label="date picker"
             onTouchTapCancel={this.handleTouchTapCancel}
             onTouchTapOk={this.handleTouchTapOk}
             okLabel={okLabel}
             shouldDisableDate={shouldDisableDate}
+            showTooltip={showTooltip}
+            tabIndex={tabIndex}
+            tooltipTitle={tooltipTitle}
+            tooltipShiftLabel={tooltipShiftLabel}
+            tooltipAltShiftLabel={tooltipAltShiftLabel}
             hideCalendarDate={hideCalendarDate}
           />
         </Container>
