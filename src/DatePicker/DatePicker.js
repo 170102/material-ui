@@ -1,6 +1,17 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+<<<<<<< HEAD
 import EventListener from 'react-event-listener';
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+import EventListener from 'react-event-listener';
+=======
+>>>>>>> 657193b... Keyboard DatePicker now allows mouse interaction while date dialog open
+=======
+import EventListener from 'react-event-listener';
+>>>>>>> 53f9325... Add event listener to handle double tab on datepicker#
+>>>>>>> 170102/scrn-datepicker
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
@@ -289,113 +300,6 @@ class DatePicker extends Component {
   };
 
   handleInputBlur = (event) => {
-    if(this.state.keyboardActivated)
-      this.setState({
-        keyboardActivated: false,
-        date: this.state.date instanceof Date ? this.state.date : undefined,
-      });
-  }
-
-  handleWindowKeyDown = (event) => {
-    const key = keycode(event),
-      inputHasFocus = document.activeElement == this.refs.input.input;
-
-    switch (key) {
-      case 'tab':
-      case 'esc':
-        if (!inputHasFocus) {
-          this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-        }
-        break;
-      case 'up':
-      case 'down':
-      case 'left':
-      case 'right':
-        if (this.refs.dialogWindow.state.open) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  handleKeyDown = (event) => {
-    if (!this.shouldHandleKeyboard)
-      return;
-
-    const key = keycode(event);
-    switch (key) {
-      case 'tab':
-        if (this.state.keyboardActivated && this.refs.dialogWindow.state.open) {
-          if (event.shiftKey) {
-            this.setState({keyboardActivated: false}, this.refs.dialogWindow.dismiss);
-          } else {
-            this.refs.input.blur();
-
-            event.preventDefault();
-            event.stopPropagation();
-          }
-        }
-        break;
-      case 'esc':
-        if(this.state.keyboardActivated)
-          this.setState({ keyboardActivated: false }, this.refs.dialogWindow.dismiss);
-        break;
-      case 'right':
-      case 'left':
-      case 'up':
-      case 'down':
-        event.stopPropagation();
-        event.preventDefault();
-    }
-  }
-
-  handleKeyUp = (event) => {
-    if (!this.shouldHandleKeyboard)
-      return;
-
-    const key = keycode(event);
-    switch (key) {
-      case 'enter':
-        if (this.refs.dialogWindow.state.open) {
-          event.stopPropagation();
-          event.preventDefault();
-          this.refs.dialogWindow.dismiss();
-        }
-        break;
-    }
-  }
-
-  handleInputChange = (event) => {
-    if (!this.refs.dialogWindow.state.open) {
-      this.refs.dialogWindow.show();
-    }
-
-    const filtered = event.target.value.replace(/[^0-9\-\/]/gi, '').replace('/', '-');
-    let dt = undefined;
-    if (filtered.length === 10) {
-      // we split this manually as Date.parse is implementation specific
-      // and also because it doesn't use the browser's timezone.
-      const parts = filtered.split('-');
-      if (parts.length === 3)
-        dt = new Date(parts[0], parts[1] - 1, parts[2]); // Note: months are 0 based
-    }
-
-    this.setState({
-      date: !dt || isNaN(dt.getTime()) ? filtered : dt,
-    });
-  }
-
-  handleClick = (event) => {
-    if (this.shouldHandleKeyboard() && this.refs.dialogWindow.state.open) {
-      event.stopPropagation();
-      return;
-    }
-  }
-
-  handleInputBlur = (event) => {
     if(this.state.keyboardActivated) {
       this.setState({
         keyboardActivated: false,
@@ -488,7 +392,7 @@ class DatePicker extends Component {
           event.preventDefault();
         }
         event.stopPropagation();
-        break;
+        event.preventDefault();
     }
   }
 
@@ -540,7 +444,7 @@ class DatePicker extends Component {
         this.openDialog();
       }, 0);
     }
-  }
+  };
 
   isControlled() {
     return this.props.hasOwnProperty('value');
