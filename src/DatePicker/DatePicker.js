@@ -1,17 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-<<<<<<< HEAD
 import EventListener from 'react-event-listener';
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-import EventListener from 'react-event-listener';
-=======
->>>>>>> 657193b... Keyboard DatePicker now allows mouse interaction while date dialog open
-=======
-import EventListener from 'react-event-listener';
->>>>>>> 53f9325... Add event listener to handle double tab on datepicker#
->>>>>>> 170102/scrn-datepicker
 import {dateTimeFormat, formatIso, isEqualDate} from './dateUtils';
 import DatePickerDialog from './DatePickerDialog';
 import TextField from '../TextField';
